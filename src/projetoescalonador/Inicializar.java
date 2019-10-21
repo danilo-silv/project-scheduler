@@ -1,28 +1,50 @@
 package projetoescalonador;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
- * 
+ *
  *
  * @author Guilherme And Danilo
  */
 public class Inicializar {
 
-public void entradaDeProcessos() {
-        Scanner input = new Scanner(System.in);
-        ListaDinamica list = new ListaDinamica();     //Lista dos processos prontos para a execução
-        String chegada, duracao, prioridade, str;
-        int cont = 1;
-        int[] io;
-        char opc = 'n';
+    Scanner input = new Scanner(System.in);
+    ListaDinamica list = new ListaDinamica();     //Lista dos processos prontos para a execução
+    ArrayList<Processo> processos = new ArrayList<>();
+    String chegada, duracao, prioridade, str;
+    int cont = 1;
+    int[] io;
+    char opc = 'n';
+
+    public void entradaDeProcessos() {
         System.out.println("--------------------------------------");
         System.out.println("|           ESCALONADOR              |");
         System.out.println("--------------------------------------");
+        construcaoProcesso();
+        Collections.sort(processos);//organizando o array por onder de chegada 
+
+        processos.forEach((proceso) -> list.add(proceso));//adcionando os processos na lista após eles serem osganizados
+
+        System.out.println("\nID dos processos cadastrados: \n" + list.imprimir());
+
+    }
+
+    static void roundRobin() {
+
+    }
+
+    static void prioridadePreemptivo() {
+
+    }
+
+    public void construcaoProcesso() {
         do {    //Inserção dos dados do processo
             System.out.println("<       Adicionar processo      >\n");
 
-            System.out.println("Informe os DADOS do " + cont + "° processo.");
+            System.out.println("Informe os DADOS do " + this.cont + "° processo.");
             System.out.print("Chegada: ");
             chegada = input.nextLine();
             System.out.print("Duração: ");
@@ -42,8 +64,7 @@ public void entradaDeProcessos() {
                     System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
                 }
             } while (compareHealingAndIo(Integer.parseInt(duracao), io));
-
-            list.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
+            processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
             cont++;
 
             do { //Validação de continuidade
@@ -55,12 +76,9 @@ public void entradaDeProcessos() {
             } while (opc != 's' && opc != 'n');
 
         } while (opc == 's');
-
-        System.out.println("\nID dos processos cadastrados: \n" + list.imprimir());
-
     }
 
-    public boolean compareHealingAndIo(int duracao, int[] io) {
+    static boolean compareHealingAndIo(int duracao, int[] io) {
         for (int number : io) {
             if (number > duracao) {
                 System.out.println("maior");
@@ -71,5 +89,3 @@ public void entradaDeProcessos() {
     }
 
 }
-
-

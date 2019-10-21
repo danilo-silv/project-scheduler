@@ -53,7 +53,7 @@ public class ListaDinamica {
         quantidade++;
         return true;
     }
-    
+
     public void add(Processo novoProc) {
         No novoNo = new No(novoProc);
         if (isEmpty()) {
@@ -64,7 +64,33 @@ public class ListaDinamica {
         }
         quantidade++;
     }
-    
+
+//    public void ordenarRoundRobin() {
+//        No auxiliar = inicio;
+//        while (auxiliar != null) {
+//
+//        }
+//    }
+//
+    public void ordenarPrioridadePreemptivo() {
+        No auxiliar = this.inicio;
+        for (int i = 0; i < size(); i++) {
+            No ref = inicio.proximo;
+            while ((auxiliar.processo.prioridade >= 0) && auxiliar.processo.prioridade < ref.processo.prioridade) {
+                ref.proximo = auxiliar;
+                break;
+            }
+            this.inicio = ref;
+        }
+        
+        while (this.inicio.proximo != null) {            
+            while (true) {                
+                
+            }
+        }
+
+    }
+
     public String imprimir() {
         StringBuilder valores = new StringBuilder();
         valores.append('(');

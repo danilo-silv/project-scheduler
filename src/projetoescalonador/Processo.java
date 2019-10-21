@@ -4,7 +4,7 @@ package projetoescalonador;
  *
  * @author Guilherme
  */
-public class Processo {
+public class Processo implements Comparable<Processo> {
 
     public int id;
     public int chegada;
@@ -28,5 +28,32 @@ public class Processo {
         this.fim = 0;
     }
 
-    
+    public int getChegada() {
+        return chegada;
+    }
+
+    public int getPrioridade() {
+        return prioridade;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public int compareTo(Processo outroProcesso) {
+        if (this.chegada > outroProcesso.chegada) {
+            return -1;
+        }
+
+        if (this.chegada < outroProcesso.chegada) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Processo[" + id + "]";
+    }
 }
