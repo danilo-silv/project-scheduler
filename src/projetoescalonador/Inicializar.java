@@ -12,7 +12,8 @@ import java.util.Collections;
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    ListaDinamica list = new ListaDinamica();     //Lista dos processos prontos para a execução
+    Lista list = new Lista();     //Lista dos processos prontos para a execução
+    Lista processo = new Lista(list);
     ArrayList<Processo> processos = new ArrayList<>();
     String chegada, duracao, prioridade, str;
     int cont = 1;
@@ -25,19 +26,8 @@ public class Inicializar {
         System.out.println("--------------------------------------");
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
-
         processos.forEach((proceso) -> list.add(proceso));//adcionando os processos na lista após eles serem osganizados
-
         System.out.println("\nID dos processos cadastrados: \n" + list.imprimir());
-
-    }
-
-    static void roundRobin() {
-
-    }
-
-    static void prioridadePreemptivo() {
-
     }
 
     public void construcaoProcesso() {
@@ -60,9 +50,11 @@ public class Inicializar {
                 for (int i = 0; i < io.length; i++) {
                     io[i] = Integer.parseInt(str.substring(i, i + 1));
                 }
+
                 if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
                     System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
                 }
+
             } while (compareHealingAndIo(Integer.parseInt(duracao), io));
             processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
             cont++;
@@ -76,12 +68,12 @@ public class Inicializar {
             } while (opc != 's' && opc != 'n');
 
         } while (opc == 's');
+
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {
         for (int number : io) {
             if (number > duracao) {
-                System.out.println("maior");
                 return true;
             }
         }

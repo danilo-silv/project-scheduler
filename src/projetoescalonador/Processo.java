@@ -1,5 +1,7 @@
 package projetoescalonador;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Guilherme
@@ -8,7 +10,7 @@ public class Processo implements Comparable<Processo> {
 
     public int id;
     public int chegada;
-    public int duração;
+    public int duracao;
     public int prioridade;
     public int[] io;
     public int espera;
@@ -19,7 +21,7 @@ public class Processo implements Comparable<Processo> {
     public Processo(int id, int chegada, int duração, int prioridade, int[] io) {
         this.id = id;
         this.chegada = chegada;
-        this.duração = duração;
+        this.duracao = duração;
         this.prioridade = prioridade;
         this.io = io;
         this.espera = 0;
@@ -52,8 +54,21 @@ public class Processo implements Comparable<Processo> {
         return 0;
     }
 
+    public void imprimir() {
+        System.out.println("ID: " + this.id);
+        System.out.println("Chegada: " + this.chegada);
+        System.out.println("Duração: " + this.duracao);
+        System.out.println("Prioridade: " + this.prioridade);
+        System.out.println("IO: " + Arrays.toString(this.io));
+        System.out.println("Espera: " + this.espera);
+        System.out.println("Turnaround: " + this.turnaround);
+        System.out.println("Inicio: " + this.inicio);
+        System.out.println("Fim: " + this.fim);
+    }
+
     @Override
     public String toString() {
-        return "Processo[" + id + "]";
+        return "Processo{" + "id=" + id + ", chegada=" + chegada + ", duracao=" + duracao + ", prioridade=" + prioridade + ", io=" + io + ", espera=" + espera + ", turnaround=" + turnaround + ", inicio=" + inicio + ", fim=" + fim + '}';
     }
+
 }

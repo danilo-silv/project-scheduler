@@ -4,15 +4,21 @@ package projetoescalonador;
  *
  * @author Guilherme And Danilo
  */
-public class ListaDinamica {
+public class Lista {
+
+    public Lista processos;
 
     public No inicio;
     public No fim;
     public int quantidade;
 
-    public ListaDinamica() {
+    public Lista() {
         this.inicio = this.fim = null;
         this.quantidade = 0;
+    }
+
+    public Lista(Lista lista) {
+        this.processos = lista;
     }
 
     public int size() {
@@ -65,13 +71,6 @@ public class ListaDinamica {
         quantidade++;
     }
 
-//    public void ordenarRoundRobin() {
-//        No auxiliar = inicio;
-//        while (auxiliar != null) {
-//
-//        }
-//    }
-//
     public void ordenarPrioridadePreemptivo() {
         No auxiliar = this.inicio;
         for (int i = 0; i < size(); i++) {
@@ -82,10 +81,10 @@ public class ListaDinamica {
             }
             this.inicio = ref;
         }
-        
-        while (this.inicio.proximo != null) {            
-            while (true) {                
-                
+
+        while (this.inicio.proximo != null) {
+            while (true) {
+
             }
         }
 
