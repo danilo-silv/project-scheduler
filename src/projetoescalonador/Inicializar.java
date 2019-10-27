@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import projetoescalonador.AppHome;
+
 /**
  *
  *
@@ -19,7 +21,8 @@ public class Inicializar {
     int cont = 1;
     int[] io;
     char opc = 'n';
-
+    
+    
     public void entradaDeProcessos() {
         System.out.println("--------------------------------------");
         System.out.println("|           ESCALONADOR              |");
