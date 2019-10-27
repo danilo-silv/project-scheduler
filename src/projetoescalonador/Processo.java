@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Guilherme
+ * @author Danilo, Guilherme e Gustavo
  */
 public class Processo implements Comparable<Processo> {
 

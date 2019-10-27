@@ -7,12 +7,12 @@ import java.util.Collections;
 /**
  *
  *
- * @author Guilherme And Danilo
+ * @author Danilo, Guilherme e Gustavo
  */
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    Lista listaProcessos = new Lista();     //Lista dos processos prontos para a execução
+    Lista listaProcessos = new Lista();     //Lista dos processos prontos e ordenados por chegada
     ArrayList<Processo> processos = new ArrayList<>();
     String chegada, duracao, prioridade, str;
     int cont = 1;
@@ -26,9 +26,9 @@ public class Inicializar {
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
         processos.forEach((processo) -> listaProcessos.add(processo));//adcionando os processos na lista após eles serem organizados
-//        processos.forEach((processo) -> {
-//            processo.imprimir();
-//        });
+        processos.forEach((processo) -> {
+            processo.imprimir();
+        });
         listaProcessos.roundRobin(5);
     }
 
@@ -102,7 +102,7 @@ public class Inicializar {
                     while (execucao.inicio != null) {
                         Processo temp = execucao.inicio.proximo.processo;//segundo objeto
                         if (temp.chegada <= tempo) {
-                            execucao.add(temporario);
+//                            execucao.add(temporario);
                         }
                         execucao.inicio = execucao.inicio.proximo;
                     }
@@ -117,6 +117,29 @@ public class Inicializar {
         //3
         //3
 
+    }
+    
+    static void prioridadePreemptivo(Lista processosOrdenados) {
+        int tempo = 0, espera;
+        Lista execucao = new Lista();
+        execucao.add(processosOrdenados.inicio.processo);
+        
+        while (execucao.inicio != null) {
+            
+            while(processosOrdenados.inicio != null){   //Verificação e preempção dos processos de maior prioridade
+                
+                //se a chegada do processo for igual ao tmepo e a prioridade for maior que a do processo em execução
+                if (processosOrdenados.inicio.processo.chegada == tempo 
+                        && processosOrdenados.inicio.processo.prioridade > execucao.inicio.processo.prioridade){
+                    execucao.add(execucao.inicio.processo);
+                    execucao.inicio = processosOrdenados.inicio;
+                }
+                processosOrdenados.inicio = processosOrdenados.inicio.proximo;
+            }
+            
+            execucao.inicio = execucao.inicio.proximo;
+        }
+        
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {
