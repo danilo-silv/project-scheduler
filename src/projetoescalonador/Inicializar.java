@@ -12,8 +12,7 @@ import java.util.Collections;
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    Lista lista = new Lista();     //Lista dos processos prontos para a execução
-    Lista processo = new Lista(lista);
+    Lista listaProcessos = new Lista();     //Lista dos processos prontos para a execução
     ArrayList<Processo> processos = new ArrayList<>();
     String chegada, duracao, prioridade, str;
     int cont = 1;
@@ -26,12 +25,11 @@ public class Inicializar {
         System.out.println("--------------------------------------");
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
-        processos.forEach((processo) -> lista.add(processo));//adcionando os processos na lista após eles serem organizados
+        processos.forEach((processo) -> listaProcessos.add(processo));//adcionando os processos na lista após eles serem organizados
 //        processos.forEach((processo) -> {
 //            processo.imprimir();
 //        });
-
-        System.out.println("\nID dos processos cadastrados: \n" + processo.imprimirId());
+        listaProcessos.roundRobin(5);
     }
 
     public void construcaoProcesso() {
@@ -73,6 +71,52 @@ public class Inicializar {
             } while (opc != 's' && opc != 'n');
 
         } while (opc == 's');
+    }
+
+    static void roundRobin(Lista processosOrdenados, int quantum) {
+        int tempo = 0, espera;
+        Lista execucao = processosOrdenados;
+        //pega primeiro processo
+        //subtrai o quantum da duração
+        //manda esse processo pra fila(ultima posição)
+        //pega o proximo
+
+        while (execucao.inicio != null) {
+            Processo temporario = execucao.inicio.processo;
+            while (temporario.duracao > 0 && execucao.inicio.proximo.processo.chegada < tempo) {
+                if (temporario.duracao > 0) {
+                    if (temporario.duracao < quantum) {
+                        tempo += temporario.duracao;
+                        temporario.duracao = 0;
+                        break;
+                    }
+                    temporario.duracao -= quantum;
+                    tempo += quantum;
+
+                    //verifica se o proximo objeto já chegou na lista
+                    //objeto.chegada <= tempo
+                    //se for menor adiciona o objeto executado no final
+                    //se for maior adiciona o objeto executado antes dele
+                    
+                    //se o rpoximo processo <= tempo de execução ai o processo que estiver executando vai proximo, se não ele é inserido antes
+                    while (execucao.inicio != null) {
+                        Processo temp = execucao.inicio.proximo.processo;//segundo objeto
+                        if (temp.chegada <= tempo) {
+                            execucao.add(temporario);
+                        }
+                        execucao.inicio = execucao.inicio.proximo;
+                    }
+
+//                    execucao.add(temporario);
+                }
+            }
+
+            execucao.inicio = execucao.inicio.proximo;
+        }
+        //4
+        //3
+        //3
+
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {

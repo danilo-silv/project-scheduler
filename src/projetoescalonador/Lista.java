@@ -6,8 +6,6 @@ package projetoescalonador;
  */
 public class Lista {
 
-    public Lista processos;
-
     public No inicio;
     public No fim;
     public int quantidade;
@@ -15,10 +13,6 @@ public class Lista {
     public Lista() {
         this.inicio = this.fim = null;
         this.quantidade = 0;
-    }
-
-    public Lista(Lista lista) {
-        this.processos = lista;
     }
 
     public int size() {
@@ -92,11 +86,13 @@ public class Lista {
 
     //Método Round Robin
     public void roundRobin(int quantum) {
-        int tempo, espera;
+        int tempo = 0, espera;
+        Lista execucao = new Lista();
         //pega primeiro processo
         //subtrai o quantum da duração
         //manda esse processo pra fila(ultima posição)
         //pega o proximo
+        execucao.add(this.inicio.processo);
 
     }
 
@@ -105,22 +101,6 @@ public class Lista {
         StringBuilder valores = new StringBuilder();
         valores.append('(');
         No auxiliar = inicio;
-        while (auxiliar != null) {
-            valores.append(auxiliar.processo.id);
-            if (auxiliar != fim) {
-                valores.append(", ");
-            }
-            auxiliar = auxiliar.proximo;
-
-        }
-        valores.append(")");
-        return valores.toString();
-    }
-
-    public String imprimirId() {
-        StringBuilder valores = new StringBuilder();
-        valores.append('(');
-        No auxiliar = this.processos.inicio;
         while (auxiliar != null) {
             valores.append(auxiliar.processo.id);
             if (auxiliar != fim) {
