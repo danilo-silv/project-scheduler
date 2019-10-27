@@ -17,7 +17,7 @@ public class Inicializar {
     String chegada, duracao, prioridade, str;
     int cont = 1;
     int[] io;
-    char opc = 'n';
+    char opc = 'n', opcIo = 'n';
 
     public void entradaDeProcessos() {
         System.out.println("--------------------------------------");
@@ -29,7 +29,8 @@ public class Inicializar {
         processos.forEach((processo) -> {
             processo.imprimir();
         });
-        listaProcessos.roundRobin(5);
+        prioridadePreemptivo(listaProcessos);
+//listaProcessos.roundRobin(5);
     }
 
     public void construcaoProcesso() {
@@ -44,6 +45,11 @@ public class Inicializar {
             System.out.print("Prioridade: ");
             prioridade = input.nextLine();
 
+//            do{
+//                System.out.println("Processo possui I/O? [s/n]: ");
+//                opcIo = input.nextLine().charAt(0);
+//                opcIo = Character.toLowerCase(opc);
+//            while(opcIo == 's');
             do {
                 System.out.print("I/O - (Ex: 2, 4, 3): ");
                 str = input.nextLine().replace(",", "");
@@ -97,7 +103,6 @@ public class Inicializar {
                     //objeto.chegada <= tempo
                     //se for menor adiciona o objeto executado no final
                     //se for maior adiciona o objeto executado antes dele
-                    
                     //se o rpoximo processo <= tempo de execução ai o processo que estiver executando vai proximo, se não ele é inserido antes
                     while (execucao.inicio != null) {
                         Processo temp = execucao.inicio.proximo.processo;//segundo objeto
@@ -118,28 +123,67 @@ public class Inicializar {
         //3
 
     }
-    
+
     static void prioridadePreemptivo(Lista processosOrdenados) {
-        int tempo = 0, espera;
         Lista execucao = new Lista();
         execucao.add(processosOrdenados.inicio.processo);
-        
-        while (execucao.inicio != null) {
-            
-            while(processosOrdenados.inicio != null){   //Verificação e preempção dos processos de maior prioridade
-                
-                //se a chegada do processo for igual ao tmepo e a prioridade for maior que a do processo em execução
-                if (processosOrdenados.inicio.processo.chegada == tempo 
-                        && processosOrdenados.inicio.processo.prioridade > execucao.inicio.processo.prioridade){
-                    execucao.add(execucao.inicio.processo);
-                    execucao.inicio = processosOrdenados.inicio;
+        int tempo = execucao.inicio.processo.chegada; //sincroniza o tempo com chegada do processo
+
+        //Cada processo possui uma prioridade
+        //Preemptiva: a cada processo que chega, verifica-se se possui
+        //prioridade maior ao que está com a CPU, e caso afirmativo, ele é alocado
+        //processo chega
+        //checa se há um processo com prioridade maior
+        //
+        while (execucao.inicio != null) { //Percorre a lista de execucao
+
+            while (execucao.inicio.processo.duracao > 0) { //efetuar processamento(decréscimo de duração e aumento de tempo)
+
+                while (processosOrdenados.inicio.proximo != null) {   //Verificação e preempção dos processos de maior prioridade
+
+                    //se a chegada do processo for igual ao tempo e a prioridade for maior que a do processo em execução
+                    if (processosOrdenados.inicio.proximo.processo.chegada <= tempo
+                            && processosOrdenados.inicio.proximo.processo.prioridade > execucao.inicio.processo.prioridade
+                            && processosOrdenados.inicio.proximo.processo.duracao > 0) {
+                        execucao.add(execucao.inicio.processo);
+                        execucao.inicio = processosOrdenados.inicio.proximo;
+                        break;
+                    }
+                    processosOrdenados.inicio.proximo = processosOrdenados.inicio.proximo.proximo;
                 }
-                processosOrdenados.inicio = processosOrdenados.inicio.proximo;
+
+                checarIo(tempo, execucao); //Verifica IO e retorna pro while caso true
+
+                if (execucao.inicio.processo.inicio == -1) { //Seta o inicio
+                    execucao.inicio.processo.inicio = tempo;
+                }
+
+                execucao.inicio.processo.duracao--;
+                tempo++;
+
+                System.out.println("Processo executado: " + execucao.inicio.processo.id);
+                System.out.println("Duração restante: " + execucao.inicio.processo.duracao);
+                System.out.println("Tempo de execução: " + tempo);
+
+                if (execucao.inicio.processo.duracao == 0) { //Seta o fim
+                    execucao.inicio.processo.fim = tempo;
+                }
             }
-            
+
             execucao.inicio = execucao.inicio.proximo;
         }
-        
+
+    }
+
+    public static void checarIo(int tempo, Lista execucao) {
+        for (int i = 0; i < execucao.inicio.processo.io.length; i++) {
+            if (tempo == execucao.inicio.processo.io[i]) {
+                execucao.add(execucao.inicio.processo);
+                execucao.inicio = execucao.inicio.proximo;
+                //quebrar e voltar pro segundo while
+                return;
+            }
+        }
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {

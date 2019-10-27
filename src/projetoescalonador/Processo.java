@@ -26,7 +26,7 @@ public class Processo implements Comparable<Processo> {
         this.io = io;
         this.espera = 0;
         this.turnaround = 0;
-        this.inicio = 0;
+        this.inicio = -1;
         this.fim = 0;
     }
 
