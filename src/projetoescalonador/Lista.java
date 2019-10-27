@@ -90,10 +90,37 @@ public class Lista {
 
     }
 
+    //Método Round Robin
+    public void roundRobin(int quantum) {
+        int tempo, espera;
+        //pega primeiro processo
+        //subtrai o quantum da duração
+        //manda esse processo pra fila(ultima posição)
+        //pega o proximo
+
+    }
+
+    //Método Prioridade
     public String imprimir() {
         StringBuilder valores = new StringBuilder();
         valores.append('(');
         No auxiliar = inicio;
+        while (auxiliar != null) {
+            valores.append(auxiliar.processo.id);
+            if (auxiliar != fim) {
+                valores.append(", ");
+            }
+            auxiliar = auxiliar.proximo;
+
+        }
+        valores.append(")");
+        return valores.toString();
+    }
+
+    public String imprimirId() {
+        StringBuilder valores = new StringBuilder();
+        valores.append('(');
+        No auxiliar = this.processos.inicio;
         while (auxiliar != null) {
             valores.append(auxiliar.processo.id);
             if (auxiliar != fim) {

@@ -12,8 +12,8 @@ import java.util.Collections;
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    Lista list = new Lista();     //Lista dos processos prontos para a execução
-    Lista processo = new Lista(list);
+    Lista lista = new Lista();     //Lista dos processos prontos para a execução
+    Lista processo = new Lista(lista);
     ArrayList<Processo> processos = new ArrayList<>();
     String chegada, duracao, prioridade, str;
     int cont = 1;
@@ -26,13 +26,17 @@ public class Inicializar {
         System.out.println("--------------------------------------");
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
-        processos.forEach((proceso) -> list.add(proceso));//adcionando os processos na lista após eles serem osganizados
-        System.out.println("\nID dos processos cadastrados: \n" + list.imprimir());
+        processos.forEach((processo) -> lista.add(processo));//adcionando os processos na lista após eles serem organizados
+//        processos.forEach((processo) -> {
+//            processo.imprimir();
+//        });
+
+        System.out.println("\nID dos processos cadastrados: \n" + processo.imprimirId());
     }
 
     public void construcaoProcesso() {
         do {    //Inserção dos dados do processo
-            System.out.println("<       Adicionar processo      >\n");
+            System.out.println("\n<       Adicionar processo      >");
 
             System.out.println("Informe os DADOS do " + this.cont + "° processo.");
             System.out.print("Chegada: ");
@@ -62,13 +66,13 @@ public class Inicializar {
             do { //Validação de continuidade
                 System.out.println("Deseja adicionar outro processo? [s/n]: ");
                 opc = input.nextLine().charAt(0);
+                opc = Character.toLowerCase(opc);
                 if (opc != 's' && opc != 'n') {
                     System.err.println("Formato inválido!");
                 }
             } while (opc != 's' && opc != 'n');
 
         } while (opc == 's');
-
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {

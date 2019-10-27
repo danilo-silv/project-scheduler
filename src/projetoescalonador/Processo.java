@@ -44,18 +44,18 @@ public class Processo implements Comparable<Processo> {
 
     @Override
     public int compareTo(Processo outroProcesso) {
-        if (this.chegada > outroProcesso.chegada) {
+        if (this.chegada < outroProcesso.chegada) {
             return -1;
         }
 
-        if (this.chegada < outroProcesso.chegada) {
+        if (this.chegada > outroProcesso.chegada) {
             return 1;
         }
         return 0;
     }
 
     public void imprimir() {
-        System.out.println("ID: " + this.id);
+        System.out.println("-----Processo " + this.id + "-----");
         System.out.println("Chegada: " + this.chegada);
         System.out.println("Duração: " + this.duracao);
         System.out.println("Prioridade: " + this.prioridade);
@@ -63,7 +63,7 @@ public class Processo implements Comparable<Processo> {
         System.out.println("Espera: " + this.espera);
         System.out.println("Turnaround: " + this.turnaround);
         System.out.println("Inicio: " + this.inicio);
-        System.out.println("Fim: " + this.fim);
+        System.out.println("Fim: " + this.fim + "\n");
     }
 
     @Override
