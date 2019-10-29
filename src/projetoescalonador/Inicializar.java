@@ -9,34 +9,34 @@ import java.util.Collections;
  *
  * @author Danilo, Guilherme e Gustavo
  */
+
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    Lista listaProcessos = new Lista();     //Lista dos processos prontos e ordenados por chegada
-    ArrayList<Processo> processos = new ArrayList<>();
+    Scanner inputIo = new Scanner(System.in);
+    ArrayList<Processo> processos = new ArrayList<>(); //Lista que recebe e ordena os processos
+    Lista listaProcessos = new Lista();     //Lista dos processos e ordenados por chegada
     String chegada, duracao, prioridade, str;
-    int cont = 1;
-    int[] io;
+    int cont = 1, io[];
     char opc = 'n', opcIo = 'n';
 
     public void entradaDeProcessos() {
-        System.out.println("--------------------------------------");
-        System.out.println("|           ESCALONADOR              |");
-        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------------------");
+        System.out.println("|           ESCALONADOR DE PROCESSOS             |");
+        System.out.println("--------------------------------------------------");
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
         processos.forEach((processo) -> listaProcessos.add(processo));//adcionando os processos na lista após eles serem organizados
         processos.forEach((processo) -> {
             processo.imprimir();
         });
-        prioridadePreemptivo(listaProcessos);
-//listaProcessos.roundRobin(5);
+        //prioridadePreemptivo(listaProcessos);
+        //listaProcessos.roundRobin(5);
     }
 
     public void construcaoProcesso() {
         do {    //Inserção dos dados do processo
             System.out.println("\n<       Adicionar processo      >");
-
             System.out.println("Informe os DADOS do " + this.cont + "° processo.");
             System.out.print("Chegada: ");
             chegada = input.nextLine();
@@ -45,30 +45,42 @@ public class Inicializar {
             System.out.print("Prioridade: ");
             prioridade = input.nextLine();
 
-//            do{
-//                System.out.println("Processo possui I/O? [s/n]: ");
-//                opcIo = input.nextLine().charAt(0);
-//                opcIo = Character.toLowerCase(opc);
-//            while(opcIo == 's');
-            do {
-                System.out.print("I/O - (Ex: 2, 4, 3): ");
-                str = input.nextLine().replace(",", "");
+            do{
+                do{ //Verifica se possui I/O
+                    System.out.print("Processo possui I/O? [s/n]: ");
+                    opcIo = inputIo.nextLine().charAt(0);
+                    opcIo = Character.toLowerCase(opcIo);
+                    if (opcIo != 's' && opcIo != 'n'){
+                        System.err.println("Formato inválido!");
+                    }
+                } while (opcIo != 's' && opcIo != 'n'); 
+                
+                if (opcIo == 's'){ //Entrada do I/O caso exista
+                    do {
+                        System.out.print("I/O - (Ex: 2, 4, 3): ");
+                        str = input.nextLine().replace(",", "");
 
-                io = new int[str.length()];
-                for (int i = 0; i < io.length; i++) {
-                    io[i] = Integer.parseInt(str.substring(i, i + 1));
+                        io = new int[str.length()];
+                        for (int i = 0; i < io.length; i++) {
+                            io[i] = Integer.parseInt(str.substring(i, i + 1));
+                        }
+
+                        if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
+                            System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
+                        }
+
+                    } while (compareHealingAndIo(Integer.parseInt(duracao), io));
+                    opcIo = 'n';
+                } else {
+                    io = null;
                 }
-
-                if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
-                    System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
-                }
-
-            } while (compareHealingAndIo(Integer.parseInt(duracao), io));
+            }while(opcIo == 's');
+            
             processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
             cont++;
 
             do { //Validação de continuidade
-                System.out.println("Deseja adicionar outro processo? [s/n]: ");
+                System.out.print("Deseja adicionar outro processo? [s/n]: ");
                 opc = input.nextLine().charAt(0);
                 opc = Character.toLowerCase(opc);
                 if (opc != 's' && opc != 'n') {
@@ -79,6 +91,9 @@ public class Inicializar {
         } while (opc == 's');
     }
 
+    
+    
+    //Lógica do RoundRobin
     static void roundRobin(Lista processosOrdenados, int quantum) {
         int tempo = 0, espera;
         Lista execucao = processosOrdenados;
@@ -124,6 +139,9 @@ public class Inicializar {
 
     }
 
+    
+    
+    //Lógica do Prioridade Preemptivo
     static void prioridadePreemptivo(Lista processosOrdenados) {
         Lista execucao = new Lista();
         execucao.add(processosOrdenados.inicio.processo);

@@ -24,22 +24,10 @@ public class Processo implements Comparable<Processo> {
         this.duracao = duração;
         this.prioridade = prioridade;
         this.io = io;
-        this.espera = 0;
-        this.turnaround = 0;
+        this.espera = -1;
+        this.turnaround = -1;
         this.inicio = -1;
-        this.fim = 0;
-    }
-
-    public int getChegada() {
-        return chegada;
-    }
-
-    public int getPrioridade() {
-        return prioridade;
-    }
-
-    public int getId() {
-        return id;
+        this.fim = -1;
     }
 
     @Override
