@@ -84,17 +84,7 @@ public class Lista {
 
     }
 
-    //Método Round Robin
-    public void roundRobin(int quantum) {
-        int tempo = 0, espera;
-        Lista execucao = new Lista();
-        //pega primeiro processo
-        //subtrai o quantum da duração
-        //manda esse processo pra fila(ultima posição)
-        //pega o proximo
-        execucao.add(this.inicio.processo);
-
-    }
+    
 
     //Método Prioridade
     public String imprimir() {

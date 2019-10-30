@@ -43,11 +43,13 @@ public class Processo implements Comparable<Processo> {
     }
 
     public void imprimir() {
-        System.out.println("-----Processo " + this.id + "-----");
+        System.out.println("\n-----Processo " + this.id + "-----");
         System.out.println("Chegada: " + this.chegada);
         System.out.println("Duração: " + this.duracao);
         System.out.println("Prioridade: " + this.prioridade);
-        System.out.println("IO: " + Arrays.toString(this.io));
+        if(this.io != null){
+            System.out.println("IO: " + Arrays.toString(this.io));
+        }
         System.out.println("Espera: " + this.espera);
         System.out.println("Turnaround: " + this.turnaround);
         System.out.println("Inicio: " + this.inicio);
