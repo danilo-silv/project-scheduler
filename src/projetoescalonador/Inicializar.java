@@ -26,9 +26,9 @@ public class Inicializar {
         construcaoProcesso();
         Collections.sort(processos);//organizando o array por onder de chegada 
         processos.forEach((processo) -> listaProcessos.add(processo));//adcionando os processos na lista após eles serem organizados
-        processos.forEach((processo) -> {
-            processo.imprimir();
-        });
+//        processos.forEach((processo) -> {
+//            processo.imprimir();
+//        });
         prioridadePreemptivo(listaProcessos);
         //listaProcessos.roundRobin(5);
     }
@@ -37,12 +37,16 @@ public class Inicializar {
         do {    //Inserção dos dados do processo
             System.out.println("\n<       Adicionar processo      >");
             System.out.println("Informe os DADOS do " + this.cont + "° processo.");
-            System.out.print("Chegada: ");
+            System.out.println("Informe chegada, duração e prioridade: ");
             chegada = input.nextLine();
-            System.out.print("Duração: ");
             duracao = input.nextLine();
-            System.out.print("Prioridade: ");
             prioridade = input.nextLine();
+//            System.out.print("Chegada: ");
+//            chegada = input.nextLine();
+//            System.out.print("Duração: ");
+//            duracao = input.nextLine();
+//            System.out.print("Prioridade: ");
+//            prioridade = input.nextLine();
 
             do {
                 do { //Verifica se possui I/O
@@ -101,57 +105,52 @@ public class Inicializar {
         //se não chegou processos, continuar executando -> ok
         //verificar i/o -> ok
 
-        Lista execucao = new Lista();
-        execucao = processosOrdenados;
-        int tempo = execucao.inicio.processo.chegada; //sincroniza o tempo com chegada do processo
+        No execucao = processosOrdenados.inicio;
+        int tempo = execucao.processo.chegada;
 
-        while (execucao.inicio != null) { //Percorre a lista de execucao
-
-            while (execucao.inicio.processo.duracao > 0) { //efetuar processamento(decréscimo de duração e aumento de tempo)
-
-                Lista identidade = execucao; //Lista de varredura
-                while (identidade.inicio.proximo != null) {   //Verificação e preempção dos processos de maior prioridade
-
-                    //se a chegada do processo for igual ao tempo e a prioridade for maior que a do processo em execução
-                    if (identidade.inicio.proximo.processo.chegada <= tempo
-                            && identidade.inicio.proximo.processo.prioridade > identidade.inicio.processo.prioridade
-                            && identidade.inicio.proximo.processo.duracao > 0) {
-                        execucao.add(execucao.inicio.processo);
-                        execucao.inicio = execucao.inicio.proximo;
-                        break;
-                    } else {
-                        if (identidade.inicio.proximo.processo.chegada <= tempo
-                                && identidade.inicio.proximo.processo.prioridade <= identidade.inicio.processo.prioridade
-                                && identidade.inicio.proximo.processo.duracao > 0) {
-                            execucao.add(identidade.inicio.proximo.processo);
+        while (execucao.proximo != null) {
+            No ref = processosOrdenados.inicio.proximo;
+            while (execucao.processo.duracao > 0) {
+                System.out.println("primeiro: " + execucao.processo.id);
+                while (ref != null) {
+                    System.out.println("segundo: " + execucao.proximo.processo.id);
+                    if (ref.processo.chegada <= tempo && ref.processo.prioridade > execucao.processo.prioridade && ref.processo.duracao > 0) {
+                        processosOrdenados.add(execucao.processo);
+                        processosOrdenados.inicio = ref;
+                        execucao = ref;
+                        if (ref.proximo != null) {
+                            continue;
+                        } else {
                             break;
                         }
-                        identidade.inicio.proximo = identidade.inicio.proximo.proximo;
                     }
 
-                    if (execucao.inicio.processo.io != null) {
-                        checarIo(tempo, execucao); //Verifica IO e retorna pro while caso true
-                    }
-
-                    if (execucao.inicio.processo.inicio == -1) { //Seta o inicio
-                        execucao.inicio.processo.inicio = tempo;
-                    }
-
-                    execucao.inicio.processo.duracao--;
-                    tempo++;
-
-                    System.out.println("\nProcesso executado: " + execucao.inicio.processo.id);
-                    System.out.println("Duração restante: " + execucao.inicio.processo.duracao);
-                    System.out.println("Tempo de execução: " + tempo);
-
-                    if (execucao.inicio.processo.duracao == 0) { //Seta o fim
-                        execucao.inicio.processo.fim = tempo;
-                    }
+                    ref = ref.proximo;
                 }
 
-                execucao.inicio = execucao.inicio.proximo;
-            }
+                if (execucao.processo.io != null) //Verifica IO e retorna pro while caso tru
+                {
+                    checarIo(tempo, processosOrdenados);
+                }
 
+                if (execucao.processo.inicio == -1) {
+                    execucao.processo.inicio = tempo;
+                }
+
+                execucao.processo.duracao--;
+                tempo++;
+
+                System.out.println("\nProcesso executado: " + execucao.processo.id);
+                System.out.println("Duração restante: " + execucao.processo.duracao);
+                System.out.println("Tempo de execução: " + tempo);
+
+                if (execucao.processo.duracao == 0) //Seta o fim
+                {
+                    execucao.processo.fim = tempo;
+                }
+
+            }
+            execucao = ref;
         }
 
     }
