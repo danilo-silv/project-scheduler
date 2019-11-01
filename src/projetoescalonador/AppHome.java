@@ -19,8 +19,8 @@ public class AppHome extends javax.swing.JFrame {
      */
     public AppHome() {
         initComponents();
-        this.jMenuItem1.setText("Round Robin");
-        this.jMenuItem2.setText("Fila Preemptiva");
+        this.roundRobinSelect.setText("Round Robin");
+        this.filaPreemptivaQueue.setText("Fila Preemptiva");
         this.jMenu2.setText("Escalonadores");
     }
     
@@ -58,11 +58,12 @@ public class AppHome extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        priority_input_label = new javax.swing.JLabel();
         processName = new javax.swing.JTextField();
         arriveTime = new javax.swing.JTextField();
         processDuration = new javax.swing.JTextField();
-        processPriority = new javax.swing.JTextField();
+        processPriorityInput = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         generate = new javax.swing.JButton();
         add_proccess = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -72,8 +73,8 @@ public class AppHome extends javax.swing.JFrame {
         quantum_field = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        roundRobinSelect = new javax.swing.JMenuItem();
+        filaPreemptivaQueue = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -255,13 +256,21 @@ public class AppHome extends javax.swing.JFrame {
 
         jLabel5.setText("Duracao:");
 
-        jLabel6.setText("Prioridade:");
+        priority_input_label.setText("Prioridade:");
 
-        processPriority.addActionListener(new java.awt.event.ActionListener() {
+        processName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processPriorityActionPerformed(evt);
+                processNameActionPerformed(evt);
             }
         });
+
+        processPriorityInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processPriorityInputActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Remover");
 
         javax.swing.GroupLayout processPaneLayout = new javax.swing.GroupLayout(processPane.getContentPane());
         processPane.getContentPane().setLayout(processPaneLayout);
@@ -274,27 +283,25 @@ public class AppHome extends javax.swing.JFrame {
                     .addComponent(processPaneReadyBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(processPaneCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(processPaneLayout.createSequentialGroup()
                         .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(processListLabel)
                             .addGroup(processPaneLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(processPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, processPaneLayout.createSequentialGroup()
-                                    .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(processDuration)
-                                        .addComponent(arriveTime)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, processPaneLayout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(processName))))
-                        .addGap(162, 162, 162)))
+                                .addComponent(processListLabel)
+                                .addGap(0, 28, Short.MAX_VALUE))
+                            .addGroup(processPaneLayout.createSequentialGroup()
+                                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(priority_input_label)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(processName)
+                                    .addComponent(processDuration)
+                                    .addComponent(arriveTime)
+                                    .addComponent(processPriorityInput))))
+                        .addGap(156, 156, 156)))
                 .addContainerGap())
         );
         processPaneLayout.setVerticalGroup(
@@ -305,7 +312,7 @@ public class AppHome extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(processName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -316,17 +323,19 @@ public class AppHome extends javax.swing.JFrame {
                 .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(processDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(processPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGap(9, 9, 9)
+                .addGroup(processPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(priority_input_label)
+                    .addComponent(processPriorityInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(processPaneAddProcessBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
                 .addComponent(processPaneReadyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(processPaneCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -354,6 +363,11 @@ public class AppHome extends javax.swing.JFrame {
         jLabel1.setText("Algoritmo sel.:");
 
         alg_name.setText("Round Robin");
+        alg_name.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                alg_nameMouseClicked(evt);
+            }
+        });
 
         quantum_label.setText("Quantum.:");
 
@@ -370,21 +384,26 @@ public class AppHome extends javax.swing.JFrame {
             }
         });
 
-        jMenuItem1.setText("jMenuItem1");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        roundRobinSelect.setText("Round Robin");
+        roundRobinSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                roundRobinSelectActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(roundRobinSelect);
 
-        jMenuItem2.setText("jMenuItem2");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+        filaPreemptivaQueue.setText("Fila Preemptiva");
+        filaPreemptivaQueue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                filaPreemptivaQueueMouseClicked(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        filaPreemptivaQueue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filaPreemptivaQueueActionPerformed(evt);
+            }
+        });
+        jMenu2.add(filaPreemptivaQueue);
 
         jMenuBar1.add(jMenu2);
 
@@ -436,17 +455,19 @@ public class AppHome extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void roundRobinSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roundRobinSelectActionPerformed
         this.alg_name.setText("Round Robin");
         this.quantum_field.setVisible(true);
         this.quantum_label.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_roundRobinSelectActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void filaPreemptivaQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filaPreemptivaQueueActionPerformed
         this.alg_name.setText("Fila Preemptiva");
+        this.priority_input_label.setVisible(false);
+        this.processPriorityInput.setVisible(false);
         this.quantum_field.setVisible(false);
         this.quantum_label.setVisible(false);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_filaPreemptivaQueueActionPerformed
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
        
@@ -467,37 +488,49 @@ public class AppHome extends javax.swing.JFrame {
        
     }//GEN-LAST:event_add_proccessMouseClicked
 
-    private void processTableMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processTableMouseEntered
+    private void jMenuBar1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jMenuBar1ComponentHidden
         // TODO add your handling code here:
-    }//GEN-LAST:event_processTableMouseEntered
+    }//GEN-LAST:event_jMenuBar1ComponentHidden
 
-    private void processPaneAddProcessBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processPaneAddProcessBtnMouseClicked
-        DefaultTableModel tableModel;
-        tableModel = (DefaultTableModel)this.processTable.getModel();
-        
-        tableModel.addRow(new Object[]{this.processName.getText(),this.arriveTime.getText(),this.processDuration.getText(), this.processPriority.getText()});
-    }//GEN-LAST:event_processPaneAddProcessBtnMouseClicked
-
-    private void processTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processTableMouseClicked
-       
-//                .addRow(new Object[]{"blah, "blah", "blah"});
-    }//GEN-LAST:event_processTableMouseClicked
-
-    private void processPriorityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processPriorityActionPerformed
+    private void processPriorityInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processPriorityInputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_processPriorityActionPerformed
+    }//GEN-LAST:event_processPriorityInputActionPerformed
 
-    private void processPaneCancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processPaneCancelBtnMouseClicked
-        this.processPane.setVisible(false);
-    }//GEN-LAST:event_processPaneCancelBtnMouseClicked
+    private void processNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_processNameActionPerformed
 
     private void processPaneReadyBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processPaneReadyBtnMouseClicked
         this.processPane.setVisible(false);// TODO add your handling code here:
     }//GEN-LAST:event_processPaneReadyBtnMouseClicked
 
-    private void jMenuBar1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jMenuBar1ComponentHidden
+    private void processPaneCancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processPaneCancelBtnMouseClicked
+        this.processPane.setVisible(false);
+    }//GEN-LAST:event_processPaneCancelBtnMouseClicked
+
+    private void processPaneAddProcessBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processPaneAddProcessBtnMouseClicked
+        DefaultTableModel tableModel;
+        tableModel = (DefaultTableModel)this.processTable.getModel();
+
+        tableModel.addRow(new Object[]{this.processName.getText(),this.arriveTime.getText(),this.processDuration.getText(), this.processPriorityInput.getText()});
+    }//GEN-LAST:event_processPaneAddProcessBtnMouseClicked
+
+    private void processTableMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processTableMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuBar1ComponentHidden
+    }//GEN-LAST:event_processTableMouseEntered
+
+    private void processTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_processTableMouseClicked
+
+        //                .addRow(new Object[]{"blah, "blah", "blah"});
+    }//GEN-LAST:event_processTableMouseClicked
+
+    private void alg_nameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_alg_nameMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_alg_nameMouseClicked
+
+    private void filaPreemptivaQueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filaPreemptivaQueueMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_filaPreemptivaQueueMouseClicked
 
     /**
      * @param args the command line arguments
@@ -538,7 +571,9 @@ public class AppHome extends javax.swing.JFrame {
     private javax.swing.JButton add_proccess;
     private javax.swing.JLabel alg_name;
     private javax.swing.JTextField arriveTime;
+    private javax.swing.JMenuItem filaPreemptivaQueue;
     private javax.swing.JButton generate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JFrame jFrame3;
@@ -551,19 +586,17 @@ public class AppHome extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel priority_input_label;
     private javax.swing.JTextField processDuration;
     private javax.swing.JLabel processListLabel;
     private javax.swing.JTextField processName;
@@ -571,10 +604,11 @@ public class AppHome extends javax.swing.JFrame {
     private javax.swing.JButton processPaneAddProcessBtn;
     private javax.swing.JButton processPaneCancelBtn;
     private javax.swing.JButton processPaneReadyBtn;
-    private javax.swing.JTextField processPriority;
+    private javax.swing.JTextField processPriorityInput;
     private javax.swing.JTable processTable;
     private javax.swing.JTextField quantum_field;
     private javax.swing.JLabel quantum_label;
+    private javax.swing.JMenuItem roundRobinSelect;
     private javax.swing.JScrollPane tablePane;
     // End of variables declaration//GEN-END:variables
 }
