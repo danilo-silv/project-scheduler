@@ -29,8 +29,9 @@ public class Inicializar {
 //        processos.forEach((processo) -> {
 //            processo.imprimir();
 //        });
-        prioridadePreemptivo(listaProcessos);
-        //listaProcessos.roundRobin(5);
+        //  prioridadePreemptivo(listaProcessos);
+
+        roundRobin(listaProcessos, 4);
     }
 
     public void construcaoProcesso() {
@@ -128,8 +129,7 @@ public class Inicializar {
                 System.out.println("Duração restante: " + execucao.processo.duracao);
                 System.out.println("Tempo de execução: " + tempo);
 
-                if (execucao.processo.duracao == 0) //Seta o fim
-                {
+                if (execucao.processo.duracao == 0) {
                     execucao.processo.fim = tempo;
                 }
 
@@ -150,47 +150,66 @@ public class Inicializar {
 
     //Lógica do RoundRobin
     static void roundRobin(Lista processosOrdenados, int quantum) {
-        int tempo = 0, espera;
-        Lista execucao = processosOrdenados;
-        //pega primeiro processo
-        //subtrai o quantum da duração
-        //manda esse processo pra fila(ultima posição)
-        //pega o proximo
+        No execucao = processosOrdenados.inicio;
+        int tempo = execucao.processo.chegada, teste = 0;
 
-        while (execucao.inicio != null) {
-            Processo temporario = execucao.inicio.processo;
-            while (temporario.duracao > 0 && execucao.inicio.proximo.processo.chegada < tempo) {
-                if (temporario.duracao > 0) {
-                    if (temporario.duracao < quantum) {
-                        tempo += temporario.duracao;
-                        temporario.duracao = 0;
-                        break;
-                    }
-                    temporario.duracao -= quantum;
-                    tempo += quantum;
-
-                    //verifica se o proximo objeto já chegou na lista
-                    //objeto.chegada <= tempo
-                    //se for menor adiciona o objeto executado no final
-                    //se for maior adiciona o objeto executado antes dele
-                    //se o rpoximo processo <= tempo de execução ai o processo que estiver executando vai proximo, se não ele é inserido antes
-                    while (execucao.inicio != null) {
-                        Processo temp = execucao.inicio.proximo.processo;//segundo objeto
-                        if (temp.chegada <= tempo) {
-//                            execucao.add(temporario);
+        while (execucao != null) {
+            while (execucao.processo.duracao > 0) {
+                No ref = execucao.proximo;
+                if (execucao.processo.duracao == 0 || teste == quantum) {
+                    while (ref != null) {
+                        if (ref.processo.duracao > 0) {
+                            processosOrdenados.add(execucao.processo);
+                            processosOrdenados.inicio = ref;
+                            execucao = ref;
+                            tempo--;
+                            execucao.processo.duracao++;
                         }
-                        execucao.inicio = execucao.inicio.proximo;
+                        ref = ref.proximo;
+                    }
+                }
+
+                if (execucao.processo.io != null) {
+                    checarIo(tempo, processosOrdenados);
+                }
+
+                if (execucao.processo.inicio == -1) {
+                    execucao.processo.inicio = tempo;
+                }
+
+                execucao.processo.duracao--;
+                if (execucao.processo.duracao < 0) {
+                    execucao.processo.duracao = 0;
+                }
+
+                tempo++;
+                if (tempo - 1 == quantum) {
+                    if (teste == 0) {
+                        teste = quantum;
+                    } else {
+                        teste = quantum * 2;
                     }
 
-//                    execucao.add(temporario);
                 }
-            }
+                System.out.println("\nProcesso executado: " + execucao.processo.id);
+                System.out.println("Duração restante: " + execucao.processo.duracao);
+                System.out.println("Tempo de execução: " + tempo);
 
-            execucao.inicio = execucao.inicio.proximo;
+                if (execucao.processo.duracao == 0) {
+                    execucao.processo.fim = tempo;
+                }
+
+            }
+            execucao = execucao.proximo;
         }
-        //4
-        //3
-        //3
+        No contaEspera = processosOrdenados.inicio;
+
+        while (contaEspera != null) {
+            contaEspera.processo.turnaround = contaEspera.processo.fim - contaEspera.processo.chegada;
+            contaEspera.processo.espera = contaEspera.processo.turnaround - contaEspera.processo.duracaoTotal;
+            contaEspera.processo.imprimir();
+            contaEspera = contaEspera.proximo;
+        }
 
     }
 
