@@ -24,8 +24,8 @@ public class Inicializar {
         System.out.println("|           ESCALONADOR DE PROCESSOS             |");
         System.out.println("--------------------------------------------------");
         construcaoProcesso();
-        Collections.sort(processos);//organizando o array por onder de chegada 
-        processos.forEach((processo) -> listaProcessos.add(processo));//adcionando os processos na lista após eles serem organizados
+        Collections.sort(processos);
+        processos.forEach((processo) -> listaProcessos.add(processo));
 //        processos.forEach((processo) -> {
 //            processo.imprimir();
 //        });
@@ -34,7 +34,7 @@ public class Inicializar {
     }
 
     public void construcaoProcesso() {
-        do {    //Inserção dos dados do processo
+        do {
             System.out.println("\n<       Adicionar processo      >");
             System.out.println("Informe os DADOS do " + this.cont + "° processo.");
             System.out.println("Informe chegada, duração e prioridade: ");
@@ -82,7 +82,7 @@ public class Inicializar {
             processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
             cont++;
 
-            do { //Validação de continuidade
+            do {
                 System.out.print("Deseja adicionar outro processo? [s/n]: ");
                 opc = input.nextLine().charAt(0);
                 opc = Character.toLowerCase(opc);
@@ -96,40 +96,24 @@ public class Inicializar {
 
     //Lógica do Prioridade Preemptivo
     static void prioridadePreemptivo(Lista processosOrdenados) {
-        //insere o primeiro processo para a execucao na lista  -> ok 
-        //iguala o tempo com a chegada do processo -> ok
-        //verifica a cada segundo se chegou um novo processo (da lista original) -> ok
-        //se chegou um novo processo, verificar sua prioridade -> ok
-        //caso sua prioridade seja maior, passar o processo atual pro fim da fila e executar o novo -> ok
-        //caso seja menor ou igual, jogar para o fim da fila -> ok
-        //se não chegou processos, continuar executando -> ok
-        //verificar i/o -> ok
-
         No execucao = processosOrdenados.inicio;
         int tempo = execucao.processo.chegada;
 
-        while (execucao.proximo != null) {
-            No ref = processosOrdenados.inicio.proximo;
+        while (execucao != null) {
             while (execucao.processo.duracao > 0) {
-                System.out.println("primeiro: " + execucao.processo.id);
+                No ref = execucao.proximo;
                 while (ref != null) {
-                    System.out.println("segundo: " + execucao.proximo.processo.id);
                     if (ref.processo.chegada <= tempo && ref.processo.prioridade > execucao.processo.prioridade && ref.processo.duracao > 0) {
                         processosOrdenados.add(execucao.processo);
                         processosOrdenados.inicio = ref;
                         execucao = ref;
-                        if (ref.proximo != null) {
-                            continue;
-                        } else {
-                            break;
-                        }
+                        tempo--;
+                        execucao.processo.duracao++;
                     }
-
                     ref = ref.proximo;
                 }
 
-                if (execucao.processo.io != null) //Verifica IO e retorna pro while caso tru
-                {
+                if (execucao.processo.io != null) {
                     checarIo(tempo, processosOrdenados);
                 }
 
@@ -150,7 +134,16 @@ public class Inicializar {
                 }
 
             }
-            execucao = ref;
+            execucao = execucao.proximo;
+        }
+
+        No contaEspera = processosOrdenados.inicio;
+
+        while (contaEspera != null) {
+            contaEspera.processo.turnaround = contaEspera.processo.fim - contaEspera.processo.chegada;
+            contaEspera.processo.espera = contaEspera.processo.turnaround - contaEspera.processo.duracaoTotal;
+            contaEspera.processo.imprimir();
+            contaEspera = contaEspera.proximo;
         }
 
     }
