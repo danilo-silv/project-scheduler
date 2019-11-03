@@ -166,39 +166,38 @@ public class Inicializar {
                         tempo--;
                     }
                     tempo++;
-                    if (execucao.processo.io != null) {
-                        if (execucao.processo.io[i] == tempo) {
-                            while (ref != null) {
-
-                                if (ref.processo.chegada > tempo) {
-                                    processosOrdenados.remove(0);
-                                    processosOrdenados.add(execucao.processo, ref.processo.posicao);
-
-                                }
-                                if (ref.proximo == null) {
-                                    processosOrdenados.remove(0);
-                                    processosOrdenados.add(execucao.processo);
-                                }
-                                ref = ref.proximo;
-                            }
-                        }
-                    }
+//                    if (execucao.processo.io != null) {
+//                        if (execucao.processo.io[i] == tempo) {
+//                            while (ref != null) {
+//
+//                                if (ref.processo.chegada > tempo) {
+//                                    processosOrdenados.remove(0);
+//                                    processosOrdenados.add(execucao.processo, ref.processo.posicao - 1);
+//
+//                                }
+//                                if (ref.proximo == null) {
+//                                    processosOrdenados.remove(0);
+//                                    processosOrdenados.add(execucao.processo);
+//                                }
+//                                ref = ref.proximo;
+//                            }
+//                        }
+//                    }
                 }
 
                 if (execucao.processo.duracao > 0) {
                     No temp = execucao.proximo;
                     while (temp != null) {
-
                         if (temp.processo.chegada > tempo) {
-                            processosOrdenados.remove(0);
-                            processosOrdenados.add(execucao.processo, temp.processo.posicao);
-
-                        }
-                        if (temp.proximo == null) {
-                            processosOrdenados.remove(0);
-                            processosOrdenados.add(execucao.processo);
+                            processosOrdenados.remove(execucao.processo.posicao);
+                            processosOrdenados.add(execucao.processo, temp.processo.posicao - 1);
                             break;
                         }
+                        //if (temp.proximo == null) {
+                        //  processosOrdenados.remove(execucao.processo.posicao);
+                        //processosOrdenados.add(execucao.processo);
+                        //break;
+                        //}
                         temp = temp.proximo;
                     }
                 }
@@ -210,13 +209,13 @@ public class Inicializar {
                 if (execucao.processo.duracao == 0) {
                     execucao.processo.fim = tempo;
                 }
-
             }
-            if (execucao.proximo == null && execucao.processo.duracao > 0) {
+            if (execucao.proximo == null) {
                 execucao = execucao;
             } else {
                 execucao = execucao.proximo;
             }
+
         }
 
         No contaEspera = processosOrdenados.inicio;
