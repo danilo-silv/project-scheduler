@@ -65,26 +65,40 @@ public class Lista {
         quantidade++;
     }
 
-    public void ordenarPrioridadePreemptivo() {
-        No auxiliar = this.inicio;
-        for (int i = 0; i < size(); i++) {
-            No ref = inicio.proximo;
-            while ((auxiliar.processo.prioridade >= 0) && auxiliar.processo.prioridade < ref.processo.prioridade) {
-                ref.proximo = auxiliar;
-                break;
+    public int remove(int posicao) {
+        if (isEmpty() || posicao > size() || posicao < 0) {
+            new Error("Inválido");
+        } else {
+            Processo temporario;
+
+            if (posicao == 0 && size() == 1) {
+                temporario = inicio.processo;
+                inicio = fim = null;
+                return temporario.id;
+            } else {
+                if (posicao == 0) {
+                    temporario = inicio.processo;
+                    inicio = inicio.proximo;
+                } else {
+                    int contador = 0;
+                    No auxiliar = inicio;
+                    while (contador < posicao - 1) {
+                        contador++;
+                        auxiliar = auxiliar.proximo;
+                    }
+
+                    No removido = auxiliar.proximo;
+                    temporario = removido.processo;
+                    auxiliar.proximo = removido.proximo;
+                }
+
+                quantidade--;
+                return temporario.id;
             }
-            this.inicio = ref;
         }
 
-        while (this.inicio.proximo != null) {
-            while (true) {
-
-            }
-        }
-
+        return 0;
     }
-
-    
 
     //Método Prioridade
     public String imprimir() {

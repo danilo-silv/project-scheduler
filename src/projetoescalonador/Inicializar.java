@@ -25,10 +25,14 @@ public class Inicializar {
         System.out.println("--------------------------------------------------");
         construcaoProcesso();
         Collections.sort(processos);
-        processos.forEach((processo) -> listaProcessos.add(processo));
-//        processos.forEach((processo) -> {
-//            processo.imprimir();
-//        });
+        int contPosicao = 0;
+        for (Processo processo : processos) {
+            processo.posicao = contPosicao++;
+            listaProcessos.add(processo);
+        }
+        //processos.forEach((processo) -> {
+        //  processo.imprimir();
+        //});
         //  prioridadePreemptivo(listaProcessos);
 
         roundRobin(listaProcessos, 4);
@@ -62,21 +66,20 @@ public class Inicializar {
                 if (opcIo == 's') { //Entrada do I/O caso exista
                     do {
                         System.out.print("I/O - (Ex: 2, 4, 3): ");
-                        str = input.nextLine().replace(",", "");
+                        str = input.nextLine();
+                        String vetString[] = str.split(",");
+                        io = new int[vetString.length];
 
-                        io = new int[str.length()];
                         for (int i = 0; i < io.length; i++) {
-                            io[i] = Integer.parseInt(str.substring(i, i + 1));
+                            io[i] = Integer.parseInt(vetString[i]);
                         }
-
                         if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
                             System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
                         }
 
                     } while (compareHealingAndIo(Integer.parseInt(duracao), io));
+
                     opcIo = 'n';
-                } else {
-                    io = null;
                 }
             } while (opcIo == 's');
 
@@ -114,10 +117,6 @@ public class Inicializar {
                     ref = ref.proximo;
                 }
 
-                if (execucao.processo.io != null) {
-                    checarIo(tempo, processosOrdenados);
-                }
-
                 if (execucao.processo.inicio == -1) {
                     execucao.processo.inicio = tempo;
                 }
@@ -151,46 +150,59 @@ public class Inicializar {
     //Lógica do RoundRobin
     static void roundRobin(Lista processosOrdenados, int quantum) {
         No execucao = processosOrdenados.inicio;
-        int tempo = execucao.processo.chegada, teste = 0;
+        int tempo = execucao.processo.chegada;
 
         while (execucao != null) {
-            while (execucao.processo.duracao > 0) {
+            if (execucao.processo.duracao > 0) {
                 No ref = execucao.proximo;
-                if (execucao.processo.duracao == 0 || teste == quantum) {
-                    while (ref != null) {
-                        if (ref.processo.duracao > 0) {
-                            processosOrdenados.add(execucao.processo);
-                            processosOrdenados.inicio = ref;
-                            execucao = ref;
-                            tempo--;
-                            execucao.processo.duracao++;
+                for (int i = 0; i < quantum; i++) {
+                    execucao.processo.duracao--;
+                    if (execucao.processo.inicio == -1) {
+                        execucao.processo.inicio = tempo;
+                    }
+                    if (execucao.processo.duracao < 0) {
+                        execucao.processo.duracao = 0;
+                        i = quantum;
+                        tempo--;
+                    }
+                    tempo++;
+                    if (execucao.processo.io != null) {
+                        if (execucao.processo.io[i] == tempo) {
+                            while (ref != null) {
+
+                                if (ref.processo.chegada > tempo) {
+                                    processosOrdenados.remove(0);
+                                    processosOrdenados.add(execucao.processo, ref.processo.posicao);
+
+                                }
+                                if (ref.proximo == null) {
+                                    processosOrdenados.remove(0);
+                                    processosOrdenados.add(execucao.processo);
+                                }
+                                ref = ref.proximo;
+                            }
                         }
-                        ref = ref.proximo;
                     }
                 }
 
-                if (execucao.processo.io != null) {
-                    checarIo(tempo, processosOrdenados);
-                }
+                if (execucao.processo.duracao > 0) {
+                    No temp = execucao.proximo;
+                    while (temp != null) {
 
-                if (execucao.processo.inicio == -1) {
-                    execucao.processo.inicio = tempo;
-                }
+                        if (temp.processo.chegada > tempo) {
+                            processosOrdenados.remove(0);
+                            processosOrdenados.add(execucao.processo, temp.processo.posicao);
 
-                execucao.processo.duracao--;
-                if (execucao.processo.duracao < 0) {
-                    execucao.processo.duracao = 0;
-                }
-
-                tempo++;
-                if (tempo - 1 == quantum) {
-                    if (teste == 0) {
-                        teste = quantum;
-                    } else {
-                        teste = quantum * 2;
+                        }
+                        if (temp.proximo == null) {
+                            processosOrdenados.remove(0);
+                            processosOrdenados.add(execucao.processo);
+                            break;
+                        }
+                        temp = temp.proximo;
                     }
-
                 }
+
                 System.out.println("\nProcesso executado: " + execucao.processo.id);
                 System.out.println("Duração restante: " + execucao.processo.duracao);
                 System.out.println("Tempo de execução: " + tempo);
@@ -200,8 +212,13 @@ public class Inicializar {
                 }
 
             }
-            execucao = execucao.proximo;
+            if (execucao.proximo == null && execucao.processo.duracao > 0) {
+                execucao = execucao;
+            } else {
+                execucao = execucao.proximo;
+            }
         }
+
         No contaEspera = processosOrdenados.inicio;
 
         while (contaEspera != null) {
@@ -211,17 +228,6 @@ public class Inicializar {
             contaEspera = contaEspera.proximo;
         }
 
-    }
-
-    public static void checarIo(int tempo, Lista execucao) {
-        for (int i = 0; i < execucao.inicio.processo.io.length; i++) {
-            if (tempo == execucao.inicio.processo.io[i]) {
-                execucao.add(execucao.inicio.processo);
-                execucao.inicio = execucao.inicio.proximo;
-                //quebrar e voltar pro segundo while
-                return;
-            }
-        }
     }
 
     static boolean compareHealingAndIo(int duracao, int[] io) {

@@ -18,6 +18,7 @@ public class Processo implements Comparable<Processo> {
     public int inicio;
     public int fim;
     public int duracaoTotal;
+    public int posicao;
 
     public Processo(int id, int chegada, int duracao, int prioridade, int[] io) {
         this.id = id;
@@ -55,7 +56,8 @@ public class Processo implements Comparable<Processo> {
         System.out.println("Espera: " + this.espera);
         System.out.println("Turnaround: " + this.turnaround);
         System.out.println("Inicio: " + this.inicio);
-        System.out.println("Fim: " + this.fim + "\n");
+        System.out.println("Fim: " + this.fim);
+        System.out.println("Posição: " + this.posicao + "\n");
     }
 
     @Override
