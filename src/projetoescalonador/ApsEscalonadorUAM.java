@@ -5,6 +5,7 @@
  */
 package projetoescalonador;
 
+import javax.swing.WindowConstants;
 import projetoescalonador.AppHome;
 
 /**
@@ -18,7 +19,11 @@ public class ApsEscalonadorUAM {
      */
     public static void main(String[] args) {
        AppHome app = new AppHome();
+       
+       app.setLocationRelativeTo(null);
+       app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
        app.setVisible(true);
+       
         
     }
     
