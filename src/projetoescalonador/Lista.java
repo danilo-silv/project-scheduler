@@ -9,10 +9,17 @@ public class Lista {
     public No inicio;
     public No fim;
     public int quantidade;
+    Lista processosAuxiliar;
 
     public Lista() {
         this.inicio = this.fim = null;
         this.quantidade = 0;
+    }
+
+    public Lista(Lista auxiliar) {
+        this.inicio = this.fim = null;
+        this.quantidade = 0;
+        this.processosAuxiliar = auxiliar;
     }
 
     public int size() {
@@ -100,7 +107,62 @@ public class Lista {
         return null;
     }
 
-    //Método Prioridade
+    public Processo get(int posicao) {
+        if (posicao < size() && !isEmpty() && posicao >= 0) {
+            int contador = 0;
+            No auxiliar = inicio;
+            while (contador < posicao) {
+                contador++;
+                auxiliar = auxiliar.proximo;
+            }
+
+            return auxiliar.processo;
+        }
+        return null;
+    }
+
+    public Processo getFirst() {
+        return inicio.processo;
+    }
+
+    public void roundRobin(int quantum) {
+        int tempo = processosAuxiliar.getFirst().chegada;
+        int contadorMedias = 0;
+
+    }
+
+    public void addAuxiliar(Processo processo) {
+        No temp = processosAuxiliar.inicio;
+        if (temp == null) {
+            processosAuxiliar.add(processo);
+        } else {
+            while (temp != null) {
+                processosAuxiliar.add(processo);
+                temp = temp.proximo;
+
+            }
+        }
+
+    }
+
+    public boolean verificaIO(int tempoAtual, Processo processo) {
+        for (int i = 0; i < processo.io.length; i++) {
+            if (processo.io[i] == tempoAtual) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean compareHealingAndIo(int duracao, int[] io) {
+        for (int number : io) {
+            if (number > duracao) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String imprimir() {
         StringBuilder valores = new StringBuilder();
         valores.append('(');
