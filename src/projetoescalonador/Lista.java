@@ -65,7 +65,7 @@ public class Lista {
         quantidade++;
     }
 
-    public int remove(int posicao) {
+    public Processo remove(int posicao) {
         if (isEmpty() || posicao > size() || posicao < 0) {
             new Error("Inválido");
         } else {
@@ -74,7 +74,7 @@ public class Lista {
             if (posicao == 0 && size() == 1) {
                 temporario = inicio.processo;
                 inicio = fim = null;
-                return temporario.id;
+                return temporario;
             } else {
                 if (posicao == 0) {
                     temporario = inicio.processo;
@@ -93,11 +93,11 @@ public class Lista {
                 }
 
                 quantidade--;
-                return temporario.id;
+                return temporario;
             }
         }
 
-        return 0;
+        return null;
     }
 
     //Método Prioridade

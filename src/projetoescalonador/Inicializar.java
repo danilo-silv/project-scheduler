@@ -149,82 +149,37 @@ public class Inicializar {
 
     //Lógica do RoundRobin
     static void roundRobin(Lista processosOrdenados, int quantum) {
-        No execucao = processosOrdenados.inicio;
+        Lista listaExecucao = new Lista();
+        listaExecucao.add(processosOrdenados.inicio.processo);
+        No execucao = listaExecucao.inicio;
         int tempo = execucao.processo.chegada;
 
         while (execucao != null) {
             if (execucao.processo.duracao > 0) {
-                No ref = execucao.proximo;
                 for (int i = 0; i < quantum; i++) {
                     execucao.processo.duracao--;
-                    if (execucao.processo.inicio == -1) {
-                        execucao.processo.inicio = tempo;
-                    }
                     if (execucao.processo.duracao < 0) {
                         execucao.processo.duracao = 0;
                         i = quantum;
-                        tempo--;
                     }
                     tempo++;
-//                    if (execucao.processo.io != null) {
-//                        if (execucao.processo.io[i] == tempo) {
-//                            while (ref != null) {
-//
-//                                if (ref.processo.chegada > tempo) {
-//                                    processosOrdenados.remove(0);
-//                                    processosOrdenados.add(execucao.processo, ref.processo.posicao - 1);
-//
-//                                }
-//                                if (ref.proximo == null) {
-//                                    processosOrdenados.remove(0);
-//                                    processosOrdenados.add(execucao.processo);
-//                                }
-//                                ref = ref.proximo;
-//                            }
-//                        }
-//                    }
-                }
-
-                if (execucao.processo.duracao > 0) {
-                    No temp = execucao.proximo;
-                    while (temp != null) {
-                        if (temp.processo.chegada > tempo) {
-                            processosOrdenados.remove(execucao.processo.posicao);
-                            processosOrdenados.add(execucao.processo, temp.processo.posicao - 1);
-                            break;
-                        }
-                        //if (temp.proximo == null) {
-                        //  processosOrdenados.remove(execucao.processo.posicao);
-                        //processosOrdenados.add(execucao.processo);
-                        //break;
-                        //}
-                        temp = temp.proximo;
-                    }
-                }
-
-                System.out.println("\nProcesso executado: " + execucao.processo.id);
-                System.out.println("Duração restante: " + execucao.processo.duracao);
-                System.out.println("Tempo de execução: " + tempo);
-
-                if (execucao.processo.duracao == 0) {
-                    execucao.processo.fim = tempo;
                 }
             }
-            if (execucao.proximo == null) {
-                execucao = execucao;
-            } else {
-                execucao = execucao.proximo;
+
+            No temp = processosOrdenados.inicio.proximo;
+
+            while (temp != null) {
+                if (temp.processo.chegada <= tempo) {
+                    listaExecucao.add(temp.processo);
+                }
+                temp = temp.proximo;
             }
 
-        }
+            if (execucao.processo.duracao > 0) {
+                listaExecucao.add(listaExecucao.remove(0));
+            }
 
-        No contaEspera = processosOrdenados.inicio;
-
-        while (contaEspera != null) {
-            contaEspera.processo.turnaround = contaEspera.processo.fim - contaEspera.processo.chegada;
-            contaEspera.processo.espera = contaEspera.processo.turnaround - contaEspera.processo.duracaoTotal;
-            contaEspera.processo.imprimir();
-            contaEspera = contaEspera.proximo;
+            execucao = execucao.proximo;
         }
 
     }
