@@ -15,6 +15,7 @@ public class Inicializar {
     ArrayList<Processo> processos = new ArrayList<>(); //Lista que recebe e ordena os processos
     Lista auxiliar = new Lista();
     Lista listaProcessos = new Lista(auxiliar);     //Lista dos processos e ordenados por chegada
+    Lista listaExecutados = new Lista();
     String chegada, duracao, prioridade, str;
     int cont = 1, io[];
     char opc = 'n', opcIo = 'n';
@@ -27,7 +28,6 @@ public class Inicializar {
         Collections.sort(processos);
 
         processos.forEach((processo) -> {
-            listaProcessos.add(processo);
             listaProcessos.addAuxiliar(processo);
         });
         //processos.forEach((processo) -> {
@@ -36,10 +36,11 @@ public class Inicializar {
         //  prioridadePreemptivo(listaProcessos);
 
         listaProcessos.roundRobin(4);
+        listaProcessos.imprimirListaExecutada();
     }
 
     public void construcaoProcesso() {
-        do {
+//        do {
 //            System.out.println("\n<       Adicionar processo      >");
 //            System.out.println("Informe os DADOS do " + this.cont + "° processo.");
 //            System.out.println("Informe chegada, duração e prioridade: ");
@@ -61,29 +62,29 @@ public class Inicializar {
 //                    if (opcIo != 's' && opcIo != 'n') {
 //                        System.err.println("Formato inválido!");
 //                    }
-            //} while (opcIo != 's' && opcIo != 'n');
-            //if (opcIo == 's') { //Entrada do I/O caso exista
-            //do {
-            //System.out.print("I/O - (Ex: 2, 4, 3): ");
-            //str = input.nextLine();
-            //String vetString[] = str.split(",");
-            //io = new int[vetString.length];
-            //for (int i = 0; i < io.length; i++) {
-            //  io[i] = Integer.parseInt(vetString[i]);
-            //}
-            // if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
-            //      System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
-            //    }
-            //  } while (compareHealingAndIo(Integer.parseInt(duracao), io));
-            //    opcIo = 'n';
-            //  }
-            //} while (opcIo == 's');
-            //processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
-            processos.add(new Processo(cont, 0, 5, 3, null));
-            processos.add(new Processo(cont, 3, 3, 2, null));
-            processos.add(new Processo(cont, 13, 9, 5, null));
-            processos.add(new Processo(cont, 5, 6, 6, null));
-            cont++;
+        //} while (opcIo != 's' && opcIo != 'n');
+        //if (opcIo == 's') { //Entrada do I/O caso exista
+        //do {
+        //System.out.print("I/O - (Ex: 2, 4, 3): ");
+        //str = input.nextLine();
+        //String vetString[] = str.split(",");
+        //io = new int[vetString.length];
+        //for (int i = 0; i < io.length; i++) {
+        //  io[i] = Integer.parseInt(vetString[i]);
+        //}
+        // if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
+        //      System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
+        //    }
+        //  } while (compareHealingAndIo(Integer.parseInt(duracao), io));
+        //    opcIo = 'n';
+        //  }
+        //} while (opcIo == 's');
+        //processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
+        processos.add(new Processo(1, 0, 5, 3, null));
+        processos.add(new Processo(2, 3, 3, 2, null));
+        processos.add(new Processo(3, 13, 9, 5, null));
+        processos.add(new Processo(4, 5, 6, 6, null));
+//            cont++;
 
 //            do {
 //                System.out.print("Deseja adicionar outro processo? [s/n]: ");
@@ -94,7 +95,7 @@ public class Inicializar {
 //                }
 //            } while (opc != 's' && opc != 'n');
 //
-        } while (cont == 6);
+//        } while (cont == 6);
     }
 
 }

@@ -17,7 +17,7 @@ public class Processo implements Comparable<Processo> {
     public int turnaround;
     public int inicio;
     public double fim;
-    public double duracaoTotal;
+    public int duracaoTotal;
 
     public Processo(int id, int chegada, int duracao, int prioridade, int[] io) {
         this.id = id;

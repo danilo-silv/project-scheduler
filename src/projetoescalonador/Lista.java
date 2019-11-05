@@ -10,6 +10,7 @@ public class Lista {
     public No fim;
     public int quantidade;
     Lista processosAuxiliar;
+    Lista processosExecutados;
 
     public Lista() {
         this.inicio = this.fim = null;
@@ -62,12 +63,12 @@ public class Lista {
     }
 
     public void add(Processo novoProc) {
-        No novoNo = new No(novoProc);
+        No novo = new No(novoProc);
         if (isEmpty()) {
-            this.inicio = this.fim = novoNo;
+            inicio = fim = novo;
         } else {
-            this.fim.proximo = novoNo;
-            this.fim = novoNo;
+            fim.proximo = novo;
+            fim = novo;
         }
         quantidade++;
     }
@@ -81,6 +82,7 @@ public class Lista {
             if (posicao == 0 && size() == 1) {
                 temporario = inicio.processo;
                 inicio = fim = null;
+                quantidade--;
                 return temporario;
             } else {
                 if (posicao == 0) {
@@ -126,32 +128,93 @@ public class Lista {
     }
 
     public void roundRobin(int quantum) {
+        Processo execucao;
         int tempo = processosAuxiliar.getFirst().chegada;
+        double espera[] = new double[processosAuxiliar.size()];
+        double turnaround[] = new double[processosAuxiliar.size()];
         int contadorMedias = 0;
+
+        while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
+            this.add(processosAuxiliar.remove(0));
+        }
+
+        while (!(this.isEmpty() && processosAuxiliar.isEmpty())) {
+            execucao = this.remove(0);
+            execucao.inicio = tempo;
+
+            for (int i = 0; i < quantum; i++) {
+                if (execucao.duracao > 0) {
+                    execucao.duracao--;
+
+                    while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
+                        this.add(processosAuxiliar.remove(0));
+                    }
+                    tempo++;
+                    if (iO(tempo, execucao)) {
+                        i = quantum;
+                    }
+                }
+            }
+            if (execucao.duracao != 0) {
+                this.add(execucao);
+            } else {
+
+                tempo++;
+                execucao.turnaround = tempo - execucao.inicio;
+                execucao.espera = execucao.turnaround - execucao.duracaoTotal;
+                espera[contadorMedias] = execucao.espera;
+                turnaround[contadorMedias] = execucao.turnaround;
+                contadorMedias++;
+                tempo--;
+            }
+            System.out.println("\n---------------STATUS--------------");
+            System.out.println("Processo executado: " + execucao.id);
+            System.out.println("Duração restante: " + execucao.duracao);
+            System.out.println("Tempo de execução: " + tempo);
+            System.out.println("---------------------------------------");
+        }
+
+        System.out.println("\nTempo de Espera     Turnaround");
+        double mediaEspera = 0;
+        double mediaTurnaround = 0;
+        for (int i = 0; i < espera.length; i++) {
+            System.out.println(espera[i] + "     " + turnaround[i]);
+            mediaEspera += espera[i];
+            mediaTurnaround += turnaround[i];
+        }
+        mediaEspera = mediaEspera / espera.length;
+        mediaTurnaround = mediaTurnaround / espera.length;
+
+        System.out.println("Media - Espera -> " + mediaEspera);
+        System.out.println("Media - Turnaround -> " + mediaTurnaround);
+
+    }
+
+    public void imprimirListaExecutada() {
+        No temp = this.inicio;
+        while (temp != null) {
+            temp.processo.imprimir();
+            temp = temp.proximo;
+        }
+    }
+
+    public boolean iO(int tempoAtual, Processo processo) {
+        if (processo.io == null) {
+            return false;
+        } else {
+            for (int i = 0; i < processo.io.length; i++) {
+                if (processo.io[i] == tempoAtual) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 
     public void addAuxiliar(Processo processo) {
-        No temp = processosAuxiliar.inicio;
-        if (temp == null) {
-            processosAuxiliar.add(processo);
-        } else {
-            while (temp != null) {
-                processosAuxiliar.add(processo);
-                temp = temp.proximo;
+        processosAuxiliar.add(processo);
 
-            }
-        }
-
-    }
-
-    public boolean verificaIO(int tempoAtual, Processo processo) {
-        for (int i = 0; i < processo.io.length; i++) {
-            if (processo.io[i] == tempoAtual) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean compareHealingAndIo(int duracao, int[] io) {
