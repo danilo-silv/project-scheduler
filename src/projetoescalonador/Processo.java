@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Danilo, Guilherme e Gustavo
+ * @author Danilo, Guilherme, Giovanni, Gustavo e Victor
  */
 public class Processo implements Comparable<Processo> {
 
@@ -57,11 +57,6 @@ public class Processo implements Comparable<Processo> {
         System.out.println("Inicio: " + this.inicio);
         System.out.println("Fim: " + this.fim);
 
-    }
-
-    @Override
-    public String toString() {
-        return "Processo{" + "id=" + id + ", chegada=" + chegada + ", duracao=" + duracao + ", prioridade=" + prioridade + ", io=" + io + ", espera=" + espera + ", turnaround=" + turnaround + ", inicio=" + inicio + ", fim=" + fim + '}';
     }
 
 }

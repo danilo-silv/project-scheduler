@@ -7,14 +7,14 @@ import java.util.Collections;
 /**
  *
  *
- * @author Danilo, Guilherme e Gustavo
+ * @author Danilo, Guilherme, Giovanni, Gustavo e Victor
  */
 public class Inicializar {
 
     Scanner input = new Scanner(System.in);
-    ArrayList<Processo> processos = new ArrayList<>(); //Lista que recebe e ordena os processos
+    ArrayList<Processo> processos = new ArrayList<>();
     Lista auxiliar = new Lista();
-    Lista listaProcessos = new Lista(auxiliar);     //Lista dos processos e ordenados por chegada
+    Lista listaProcessos = new Lista(auxiliar);
     Lista listaExecutados = new Lista();
     String chegada, duracao, prioridade, str;
     int cont = 1, io[];
@@ -30,13 +30,9 @@ public class Inicializar {
         processos.forEach((processo) -> {
             listaProcessos.addAuxiliar(processo);
         });
-        //processos.forEach((processo) -> {
-        //  processo.imprimir();
-        //});
-        //  prioridadePreemptivo(listaProcessos);
 
         listaProcessos.roundRobin(4);
-        listaProcessos.imprimirListaExecutada();
+        //listaProcessos.processosExecutados.imprimirListaExecutada();
     }
 
     public void construcaoProcesso() {

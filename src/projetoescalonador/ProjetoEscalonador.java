@@ -2,7 +2,7 @@ package projetoescalonador;
 
 /**
  *
- * @author Danilo, Guilherme e Gustavo
+ * @author Danilo, Guilherme, Giovanni, Gustavo e Victor
  */
 public class ProjetoEscalonador {
 

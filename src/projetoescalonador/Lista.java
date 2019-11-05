@@ -2,7 +2,7 @@ package projetoescalonador;
 
 /**
  *
- * @author Danilo, Guilherme e Gustavo
+ * @author Danilo, Guilherme, Giovanni, Gustavo e Victor
  */
 public class Lista {
 
@@ -21,6 +21,74 @@ public class Lista {
         this.inicio = this.fim = null;
         this.quantidade = 0;
         this.processosAuxiliar = auxiliar;
+    }
+
+    //Lógica do Round Robin
+    public void roundRobin(int quantum) {
+        Processo execucao;
+        int tempo = processosAuxiliar.getFirst().chegada;
+        double espera[] = new double[processosAuxiliar.size()];
+        double turnaround[] = new double[processosAuxiliar.size()];
+        int[] idProcesso = new int[processosAuxiliar.size()];
+
+        int contadorMedias = 0;
+
+        while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
+            this.add(processosAuxiliar.remove(0));
+        }
+
+        while (!(this.isEmpty() && processosAuxiliar.isEmpty())) {
+            execucao = this.remove(0);
+            execucao.inicio = tempo;
+
+            for (int i = 0; i < quantum; i++) {
+                if (execucao.duracao > 0) {
+                    execucao.duracao--;
+
+                    while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
+                        this.add(processosAuxiliar.remove(0));
+                    }
+                    tempo++;
+                    if (iO(tempo, execucao)) {
+                        i = quantum;
+                    }
+                } else {
+                    i = quantum;
+                }
+            }
+            if (execucao.duracao != 0) {
+                this.add(execucao);
+            } else {
+                execucao.turnaround = tempo - execucao.chegada;
+                execucao.espera = execucao.turnaround - execucao.duracaoTotal;;
+                espera[contadorMedias] = execucao.espera;
+                turnaround[contadorMedias] = execucao.turnaround;
+                idProcesso[contadorMedias] = execucao.id;
+                //processosExecutados.add(execucao);
+                contadorMedias++;
+            }
+            System.out.println("\n---------------STATUS--------------");
+            System.out.println("Processo executado: " + execucao.id);
+            System.out.println("Duração restante: " + execucao.duracao);
+            System.out.println("Tempo de execução: " + tempo);
+            System.out.println("-----------------------------------");
+        }
+
+        System.out.println("\n<-- Tempo de Espera--|--Turnaround -->");
+        double mediaEspera = 0;
+        double mediaTurnaround = 0;
+        for (int i = 0; i < espera.length; i++) {
+            System.out.println("P" + idProcesso[i] + ":             " + espera[i] + "  |  " + turnaround[i]);
+            mediaEspera += espera[i];
+            mediaTurnaround += turnaround[i];
+        }
+        mediaEspera = mediaEspera / espera.length;
+        mediaTurnaround = mediaTurnaround / espera.length;
+        
+        System.out.println("\n--------------|MÉDIAS|--------------");
+        System.out.println("Espera:          " + mediaEspera);
+        System.out.println("Turnaround:      " + mediaTurnaround);
+
     }
 
     public int size() {
@@ -127,69 +195,6 @@ public class Lista {
         return inicio.processo;
     }
 
-    public void roundRobin(int quantum) {
-        Processo execucao;
-        int tempo = processosAuxiliar.getFirst().chegada;
-        double espera[] = new double[processosAuxiliar.size()];
-        double turnaround[] = new double[processosAuxiliar.size()];
-        int contadorMedias = 0;
-
-        while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
-            this.add(processosAuxiliar.remove(0));
-        }
-
-        while (!(this.isEmpty() && processosAuxiliar.isEmpty())) {
-            execucao = this.remove(0);
-            execucao.inicio = tempo;
-
-            for (int i = 0; i < quantum; i++) {
-                if (execucao.duracao > 0) {
-                    execucao.duracao--;
-
-                    while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
-                        this.add(processosAuxiliar.remove(0));
-                    }
-                    tempo++;
-                    if (iO(tempo, execucao)) {
-                        i = quantum;
-                    }
-                }
-            }
-            if (execucao.duracao != 0) {
-                this.add(execucao);
-            } else {
-
-                tempo++;
-                execucao.turnaround = tempo - execucao.inicio;
-                execucao.espera = execucao.turnaround - execucao.duracaoTotal;
-                espera[contadorMedias] = execucao.espera;
-                turnaround[contadorMedias] = execucao.turnaround;
-                contadorMedias++;
-                tempo--;
-            }
-            System.out.println("\n---------------STATUS--------------");
-            System.out.println("Processo executado: " + execucao.id);
-            System.out.println("Duração restante: " + execucao.duracao);
-            System.out.println("Tempo de execução: " + tempo);
-            System.out.println("---------------------------------------");
-        }
-
-        System.out.println("\nTempo de Espera     Turnaround");
-        double mediaEspera = 0;
-        double mediaTurnaround = 0;
-        for (int i = 0; i < espera.length; i++) {
-            System.out.println(espera[i] + "     " + turnaround[i]);
-            mediaEspera += espera[i];
-            mediaTurnaround += turnaround[i];
-        }
-        mediaEspera = mediaEspera / espera.length;
-        mediaTurnaround = mediaTurnaround / espera.length;
-
-        System.out.println("Media - Espera -> " + mediaEspera);
-        System.out.println("Media - Turnaround -> " + mediaTurnaround);
-
-    }
-
     public void imprimirListaExecutada() {
         No temp = this.inicio;
         while (temp != null) {
@@ -224,22 +229,6 @@ public class Lista {
             }
         }
         return false;
-    }
-
-    public String imprimir() {
-        StringBuilder valores = new StringBuilder();
-        valores.append('(');
-        No auxiliar = inicio;
-        while (auxiliar != null) {
-            valores.append(auxiliar.processo.id);
-            if (auxiliar != fim) {
-                valores.append(", ");
-            }
-            auxiliar = auxiliar.proximo;
-
-        }
-        valores.append(")");
-        return valores.toString();
     }
 
 }
