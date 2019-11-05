@@ -59,4 +59,11 @@ public class Processo implements Comparable<Processo> {
 
     }
 
+    @Override
+    public String toString() {
+        return "Processo{" + "id=" + id + ", chegada=" + chegada + ", duracao=" + duracao + ", prioridade=" + prioridade + ", io=" + io + '}';
+    }
+    
+    
+
 }

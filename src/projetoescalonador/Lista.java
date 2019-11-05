@@ -84,7 +84,7 @@ public class Lista {
         }
         mediaEspera = mediaEspera / espera.length;
         mediaTurnaround = mediaTurnaround / espera.length;
-        
+
         System.out.println("\n--------------|MÉDIAS|--------------");
         System.out.println("Espera:          " + mediaEspera);
         System.out.println("Turnaround:      " + mediaTurnaround);

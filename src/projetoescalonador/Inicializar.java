@@ -76,10 +76,11 @@ public class Inicializar {
         //  }
         //} while (opcIo == 's');
         //processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
-        processos.add(new Processo(1, 0, 5, 3, null));
-        processos.add(new Processo(2, 3, 3, 2, null));
-        processos.add(new Processo(3, 13, 9, 5, null));
-        processos.add(new Processo(4, 5, 6, 6, null));
+        processos.add(new Processo(1, 3, 10, 5, null));
+        processos.add(new Processo(2, 1, 8, 3, null));
+        processos.add(new Processo(3, 4, 2, 2, null));
+        processos.add(new Processo(4, 6, 7, 8, null));
+        processos.add(new Processo(5, 2, 5, 1, null));
 //            cont++;
 
 //            do {
