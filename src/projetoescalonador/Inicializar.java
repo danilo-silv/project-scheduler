@@ -17,7 +17,7 @@ public class Inicializar {
     Lista listaProcessos = new Lista(auxiliar);
     Lista listaExecutados = new Lista();
     String chegada, duracao, prioridade, str;
-    int cont = 1, io[];
+    int cont = 1, io[], escalonador = 1, quantum;
     char opc = 'n', opcIo = 'n';
 
     public void entradaDeProcessos() {
@@ -30,72 +30,97 @@ public class Inicializar {
         processos.forEach((processo) -> {
             listaProcessos.addAuxiliar(processo);
         });
+        if (escalonador == 1) {
+            listaProcessos.roundRobin(quantum);
+        } else {
+            listaProcessos.prioridadePreemptivo();
+        }
 
-        listaProcessos.roundRobin(4);
-        //listaProcessos.processosExecutados.imprimirListaExecutada();
     }
 
     public void construcaoProcesso() {
-//        do {
-//            System.out.println("\n<       Adicionar processo      >");
-//            System.out.println("Informe os DADOS do " + this.cont + "° processo.");
-//            System.out.println("Informe chegada, duração e prioridade: ");
-//            chegada = input.nextLine();
-//            duracao = input.nextLine();
-//            prioridade = input.nextLine();
-//            System.out.print("Chegada: ");
-//            chegada = input.nextLine();
-//            System.out.print("Duração: ");
-//            duracao = input.nextLine();
-//            System.out.print("Prioridade: ");
-//            prioridade = input.nextLine();
+        do {
 
-//            do {
-//                do { //Verifica se possui I/O
-//                    System.out.print("Processo possui I/O? [s/n]: ");
-//                    opcIo = input.nextLine().charAt(0);
-//                    opcIo = Character.toLowerCase(opcIo);
-//                    if (opcIo != 's' && opcIo != 'n') {
-//                        System.err.println("Formato inválido!");
-//                    }
-        //} while (opcIo != 's' && opcIo != 'n');
-        //if (opcIo == 's') { //Entrada do I/O caso exista
-        //do {
-        //System.out.print("I/O - (Ex: 2, 4, 3): ");
-        //str = input.nextLine();
-        //String vetString[] = str.split(",");
-        //io = new int[vetString.length];
-        //for (int i = 0; i < io.length; i++) {
-        //  io[i] = Integer.parseInt(vetString[i]);
-        //}
-        // if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
-        //      System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
-        //    }
-        //  } while (compareHealingAndIo(Integer.parseInt(duracao), io));
-        //    opcIo = 'n';
-        //  }
-        //} while (opcIo == 's');
-        //processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
-        
-        
-        processos.add(new Processo(1, 10, 9, 5, new int[]{2,4,6,8}));
-        processos.add(new Processo(2, 4, 10, 3, new int[]{5}));
-        processos.add(new Processo(3, 0, 5, 2, new int[]{2}));
-        processos.add(new Processo(4, 1, 7, 1, new int[]{3,6}));
-        processos.add(new Processo(5, 17, 2, 1, null));
-        
-//            cont++;
+            System.out.println("\n<       Escolha do escalonador      >");
+            System.out.println("1 - Round Robin");
+            System.out.println("2 - Prioridade Preemptivo");
 
-//            do {
-//                System.out.print("Deseja adicionar outro processo? [s/n]: ");
-//                opc = input.nextLine().charAt(0);
-//                opc = Character.toLowerCase(opc);
-//                if (opc != 's' && opc != 'n') {
-//                    System.err.println("Formato inválido!");
-//                }
-//            } while (opc != 's' && opc != 'n');
-//
-//        } while (cont == 6);
+            do {
+
+                escalonador = input.nextInt();
+                if (escalonador != 1 && escalonador != 2) {
+                    System.err.println("Formato inválido!");
+                    System.out.println("Digite novamente: ");
+                }
+
+            } while (escalonador != 1 && escalonador != 2);
+
+            if (escalonador == 1) {
+                System.out.println("Informe o valor do quantum: ");
+                do {
+                    quantum = input.nextInt();
+                    if (quantum < 0) {
+                        System.err.println("O quantum deve ser maior que 0!");
+                        System.out.println("Digite novamente: ");
+                    }
+                } while (quantum < 0);
+            }
+            System.out.println("\n<       Adicionar processo      >");
+
+            System.out.println("Informe os DADOS do " + this.cont + "° processo.");
+            System.out.println("Informe chegada, duração e prioridade: ");
+            System.out.print("Chegada: ");
+            chegada = input.nextLine();
+            System.out.print("Duração: ");
+            duracao = input.nextLine();
+            System.out.print("Prioridade: ");
+            prioridade = input.nextLine();
+
+            do {
+                do { //Verifica se possui I/O
+                    System.out.print("Processo possui I/O? [s/n]: ");
+                    opcIo = input.nextLine().charAt(0);
+                    opcIo = Character.toLowerCase(opcIo);
+                    if (opcIo != 's' && opcIo != 'n') {
+                        System.err.println("Formato inválido!");
+                    }
+                } while (opcIo != 's' && opcIo != 'n');
+                if (opcIo == 's') { //Entrada do I/O caso exista
+                    do {
+                        System.out.print("I/O - (Ex: 2, 4, 3): ");
+                        str = input.nextLine();
+                        String vetString[] = str.split(",");
+                        io = new int[vetString.length];
+                        for (int i = 0; i < io.length; i++) {
+                            io[i] = Integer.parseInt(vetString[i]);
+                        }
+                        if (compareHealingAndIo(Integer.parseInt(duracao), io)) {
+                            System.err.println("O tempo que o processo fara I/O deve ser menor que o tempo de duração do processo!");
+                        }
+                    } while (compareHealingAndIo(Integer.parseInt(duracao), io));
+                    opcIo = 'n';
+                }
+            } while (opcIo == 's');
+            processos.add(new Processo(cont, Integer.parseInt(chegada), Integer.parseInt(duracao), Integer.parseInt(prioridade), io));
+            cont++;
+            do {
+                System.out.print("Deseja adicionar outro processo? [s/n]: ");
+                opc = input.nextLine().charAt(0);
+                opc = Character.toLowerCase(opc);
+                if (opc != 's' && opc != 'n') {
+                    System.err.println("Formato inválido!");
+                }
+            } while (opc != 's' && opc != 'n');
+
+        } while (cont == 6);
     }
 
+    public boolean compareHealingAndIo(int duracao, int[] io) {
+        for (int number : io) {
+            if (number > duracao) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

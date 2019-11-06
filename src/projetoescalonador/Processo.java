@@ -16,7 +16,7 @@ public class Processo implements Comparable<Processo> {
     public int espera;
     public int turnaround;
     public int inicio;
-    public double fim;
+    public int fim;
     public int duracaoTotal;
     public int tempoProcesso;
 

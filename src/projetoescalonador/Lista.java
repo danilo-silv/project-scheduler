@@ -10,7 +10,6 @@ public class Lista {
     public No fim;
     public int quantidade;
     Lista processosAuxiliar;
-    Lista processosExecutados;
 
     public Lista() {
         this.inicio = this.fim = null;
@@ -21,6 +20,86 @@ public class Lista {
         this.inicio = this.fim = null;
         this.quantidade = 0;
         this.processosAuxiliar = auxiliar;
+    }
+
+    //Lógica do Prioridade Preemptivo
+    public void prioridadePreemptivo() {
+        No execucao = processosAuxiliar.inicio;
+        int tempo = execucao.processo.chegada;
+
+        while (execucao != null) {
+            while (execucao.processo.duracao > 0) {
+
+                No ref = null;
+                if (execucao.proximo != null) {
+                    ref = execucao.proximo;
+                }
+
+                while (ref != null) {
+                    if (ref.processo.chegada <= tempo && ref.processo.prioridade > execucao.processo.prioridade && ref.processo.duracao > 0) {
+                        processosAuxiliar.add(execucao.processo);
+                        processosAuxiliar.inicio = ref;
+                        execucao = ref;
+                        tempo--;
+                        execucao.processo.duracao++;
+                    }
+                    ref = ref.proximo;
+                }
+
+                execucao.processo.duracao--;
+                tempo++;
+
+                System.out.println("\nProcesso executado: " + execucao.processo.id);
+                System.out.println("Duração restante: " + execucao.processo.duracao);
+                System.out.println("Tempo de execução: " + tempo);
+
+            }
+            if (execucao.processo.inicio == -1) {
+                execucao.processo.inicio = tempo;
+            }
+            if (execucao.processo.duracao == 0) {
+                execucao.processo.fim = tempo;
+            }
+            if (execucao.processo.duracao == 0) {
+
+                System.out.println("\n---------------STATUS--------------");
+                System.out.println("Processo executado: " + execucao.processo.id);
+                System.out.println("Duração restante: " + execucao.processo.duracao);
+                System.out.println("Tempo de execução: " + tempo);
+                System.out.println("-----------------------------------");
+
+                System.out.println("\n<-- Tempo de Turnaround --|-- Espera -->");
+                System.out.println("P" + execucao.processo.id + ": " + (execucao.processo.turnaround = execucao.processo.fim - execucao.processo.chegada)
+                        + " | " + (execucao.processo.espera = execucao.processo.turnaround - execucao.processo.duracaoTotal));
+                //System.out.println("\n--------------|MÉDIAS|--------------");
+//                System.out.println("Espera:          " + mediaEspera);
+//                System.out.println("Turnaround:      " + mediaTurnaround);
+                execucao = execucao.proximo;
+            }
+        }
+
+    }
+
+    public Processo escolherExecutar(Lista lista) {
+        No auxiliar = lista.inicio;
+        Lista listaPrioridade = new Lista();
+        listaPrioridade.add(auxiliar.processo);
+
+        while (auxiliar.proximo != null) {
+            if (auxiliar.processo.prioridade < auxiliar.proximo.processo.prioridade) {
+                listaPrioridade.inicio = listaPrioridade.fim = null; //limpa a lista
+                listaPrioridade.add(auxiliar.processo);
+            }
+
+            if (auxiliar.processo.prioridade == auxiliar.proximo.processo.prioridade) {
+                listaPrioridade.add(auxiliar.proximo.processo);
+            }
+
+            auxiliar = auxiliar.proximo;
+        }
+        //organizar lista final para saber qual retornar
+
+        return auxiliar.processo;
     }
 
     //Lógica do Round Robin
@@ -64,7 +143,6 @@ public class Lista {
                 espera[contadorMedias] = execucao.espera;
                 turnaround[contadorMedias] = execucao.turnaround;
                 idProcesso[contadorMedias] = execucao.id;
-                //processosExecutados.add(execucao);
                 contadorMedias++;
             }
             System.out.println("\n---------------STATUS--------------");
@@ -220,15 +298,6 @@ public class Lista {
     public void addAuxiliar(Processo processo) {
         processosAuxiliar.add(processo);
 
-    }
-
-    public boolean compareHealingAndIo(int duracao, int[] io) {
-        for (int number : io) {
-            if (number > duracao) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
