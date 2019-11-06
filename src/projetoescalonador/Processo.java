@@ -18,6 +18,7 @@ public class Processo implements Comparable<Processo> {
     public int inicio;
     public double fim;
     public int duracaoTotal;
+    public int tempoProcesso;
 
     public Processo(int id, int chegada, int duracao, int prioridade, int[] io) {
         this.id = id;
@@ -30,6 +31,7 @@ public class Processo implements Comparable<Processo> {
         this.inicio = -1;
         this.fim = -1;
         this.duracaoTotal = duracao;
+        this.tempoProcesso = 0;
     }
 
     @Override
@@ -63,7 +65,5 @@ public class Processo implements Comparable<Processo> {
     public String toString() {
         return "Processo{" + "id=" + id + ", chegada=" + chegada + ", duracao=" + duracao + ", prioridade=" + prioridade + ", io=" + io + '}';
     }
-    
-    
 
 }

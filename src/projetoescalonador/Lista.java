@@ -44,12 +44,12 @@ public class Lista {
             for (int i = 0; i < quantum; i++) {
                 if (execucao.duracao > 0) {
                     execucao.duracao--;
-
+                    execucao.tempoProcesso++;
                     while (!processosAuxiliar.isEmpty() && processosAuxiliar.getFirst().chegada == tempo) {
                         this.add(processosAuxiliar.remove(0));
                     }
                     tempo++;
-                    if (iO(tempo, execucao)) {
+                    if (iO(execucao.tempoProcesso, execucao)) {
                         i = quantum;
                     }
                 } else {
