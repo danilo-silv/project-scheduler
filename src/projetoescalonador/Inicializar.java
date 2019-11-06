@@ -31,7 +31,7 @@ public class Inicializar {
         processos.forEach((processo) -> {
             listaProcessos.addAuxiliar(processo);
         });
-        if (escalonador == "1") {
+        if (Integer.parseInt(escalonador) == 1) {
             listaProcessos.roundRobin(Integer.parseInt(quantum));
             System.out.println(Integer.parseInt(quantum));
         } else {
@@ -47,7 +47,7 @@ public class Inicializar {
         System.out.println("2 - Prioridade Preemptivo");
         escalonador = input.nextLine();
         System.out.println(escalonador);
-        if (escalonador == "1") {
+        if (Integer.parseInt(escalonador) == 1) {
             System.out.println("Informe o valor do Quantum: ");
             quantum = input.nextLine();
             System.out.println(quantum);
