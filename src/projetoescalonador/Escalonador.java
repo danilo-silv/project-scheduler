@@ -75,57 +75,110 @@ public class Escalonador {
 
     //Lógica do Prioridade Preemptivo
     public void prioridadePreemptivo(Lista lista) {
-        No execucao = lista.processosAuxiliar.inicio;
-        int tempo = execucao.processo.chegada;
+        Lista executados = new Lista();
+        Processo execucao;
 
-        while (execucao != null) {
-            while (execucao.processo.duracao > 0) {
+        int tempo = lista.processosAuxiliar.getFirst().chegada;
 
-                No ref = null;
-                if (execucao.proximo != null) {
-                    ref = execucao.proximo;
-                }
-
-                while (ref != null) {
-                    if (ref.processo.chegada <= tempo && ref.processo.prioridade > execucao.processo.prioridade && ref.processo.duracao > 0) {
-                        lista.processosAuxiliar.add(execucao.processo);
-                        lista.processosAuxiliar.inicio = ref;
-                        execucao = ref;
-                        tempo--;
-                        execucao.processo.duracao++;
-                    }
-                    ref = ref.proximo;
-                }
-
-                execucao.processo.duracao--;
-                tempo++;
-
-                System.out.println("\nProcesso executado: " + execucao.processo.id);
-                System.out.println("Duração restante: " + execucao.processo.duracao);
-                System.out.println("Tempo de execução: " + tempo);
-
-            }
-            if (execucao.processo.inicio == -1) {
-                execucao.processo.inicio = tempo;
-            }
-            if (execucao.processo.duracao == 0) {
-                execucao.processo.fim = tempo;
-            }
-            if (execucao.processo.duracao == 0) {
-
-                System.out.println("\n---------------STATUS--------------");
-                System.out.println("Processo executado: " + execucao.processo.id);
-                System.out.println("Duração restante: " + execucao.processo.duracao);
-                System.out.println("Tempo de execução: " + tempo);
-                System.out.println("-----------------------------------");
-
-                System.out.println("\n<-- Tempo de Turnaround --|-- Espera -->");
-                System.out.println("P" + execucao.processo.id + ": " + (execucao.processo.turnaround = execucao.processo.fim - execucao.processo.chegada)
-                        + " | " + (execucao.processo.espera = execucao.processo.turnaround - execucao.processo.duracaoTotal));
-                execucao = execucao.proximo;
-            }
+        while (!lista.processosAuxiliar.isEmpty() && lista.processosAuxiliar.getFirst().chegada == tempo) {
+            lista.add(lista.processosAuxiliar.remove(0));
         }
 
+        while (!(lista.isEmpty() && lista.processosAuxiliar.isEmpty())) {
+            execucao = lista.remove(0);
+            execucao.inicio = tempo;
+
+            for (int i = 0; i < execucao.duracao; i++) {
+                if (execucao.duracao > 0) {
+                    execucao.duracao--;
+                    execucao.tempoProcesso++;
+                    tempo++;
+                    while (!lista.processosAuxiliar.isEmpty() && lista.processosAuxiliar.getFirst().chegada == tempo) {
+                        if (lista.processosAuxiliar.getFirst().prioridade > execucao.prioridade) {
+                            i = execucao.duracao;
+                            lista.add(lista.processosAuxiliar.remove(0));
+                        }
+                    }
+
+//                    if (lista.processosAuxiliar.isEmpty()) {
+//                        No ref = lista.processosAuxiliar.inicio;
+//                        while (ref != null) {
+//                            if (ref.processo.prioridade > execucao.prioridade) {
+//                                lista.processosAuxiliar.add(lista.remove(0));
+//                            }
+//                            ref = ref.proximo;
+//                        }
+//                    }
+
+                    if (iO(execucao.tempoProcesso, execucao)) {
+                        i = execucao.duracao;
+                    }
+                } else {
+                    i = execucao.duracao;
+                }
+            }
+            if (execucao.duracao != 0) {             
+                lista.add(execucao);
+            } else {
+                execucao.fim = tempo;
+                execucao.turnaround = tempo - execucao.chegada;
+                execucao.espera = execucao.turnaround - execucao.duracaoTotal;
+                executados.add(execucao);
+            }
+            System.out.println("\n---------------STATUS--------------");
+            System.out.println("Processo executado: " + execucao.id);
+            System.out.println("Duração restante: " + execucao.duracao);
+            System.out.println("Tempo de execução: " + tempo);
+            System.out.println("-----------------------------------");
+        }
+
+//        while (execucao != null) {
+//            while (execucao.processo.duracao > 0) {
+//
+//                No ref = null;
+//                if (execucao.proximo != null) {
+//                    ref = execucao.proximo;
+//                }
+//
+//                while (ref != null) {
+//                    if (ref.processo.chegada <= tempo && ref.processo.prioridade > execucao.processo.prioridade && ref.processo.duracao > 0) {
+//                        lista.processosAuxiliar.add(execucao.processo);
+//                        lista.processosAuxiliar.inicio = ref;
+//                        execucao = ref;
+//                        tempo--;
+//                        execucao.processo.duracao++;
+//                    }
+//                    ref = ref.proximo;
+//                }
+//
+//                execucao.processo.duracao--;
+//                tempo++;
+//
+//                System.out.println("\nProcesso executado: " + execucao.processo.id);
+//                System.out.println("Duração restante: " + execucao.processo.duracao);
+//                System.out.println("Tempo de execução: " + tempo);
+//
+//            }
+//            if (execucao.processo.inicio == -1) {
+//                execucao.processo.inicio = tempo;
+//            }
+//            if (execucao.processo.duracao == 0) {
+//                execucao.processo.fim = tempo;
+//            }
+//            if (execucao.processo.duracao == 0) {
+//
+//                System.out.println("\n---------------STATUS--------------");
+//                System.out.println("Processo executado: " + execucao.processo.id);
+//                System.out.println("Duração restante: " + execucao.processo.duracao);
+//                System.out.println("Tempo de execução: " + tempo);
+//                System.out.println("-----------------------------------");
+//
+//                System.out.println("\n<-- Tempo de Turnaround --|-- Espera -->");
+//                System.out.println("P" + execucao.processo.id + ": " + (execucao.processo.turnaround = execucao.processo.fim - execucao.processo.chegada)
+//                        + " | " + (execucao.processo.espera = execucao.processo.turnaround - execucao.processo.duracaoTotal));
+//                execucao = execucao.proximo;
+//            }
+//        }
     }
 
     public boolean iO(int tempoAtual, Processo processo) {
@@ -134,7 +187,7 @@ public class Escalonador {
         } else {
             for (int i = 0; i < processo.io.length; i++) {
                 if (processo.io[i] == tempoAtual) {
-                    System.out.println("FEZ IO");
+//                    System.out.println("FEZ IO");
                     return true;
                 }
             }
